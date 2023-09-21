@@ -1,3 +1,5 @@
+[TOC]
+
 # Portal-Calendar-py
 
 CN | [EN](./README-en.md)
@@ -5,9 +7,6 @@ CN | [EN](./README-en.md)
 这是一个墨水屏电子日历的项目，原项目地址：[Portal Calendar](https://github.com/wuspy/portal_calendar)
 
 看到这个项目想着感觉更加适合我们的黄历，考虑到自己家里都是过农历生日，还有看黄历的习惯，打算就做一个电子黄历
-
-
-[TOC]
 
 
 ## 目录结构
