@@ -1,6 +1,6 @@
 # Portal Calendar
 
-[zh](https://github.com/eleveyuan/portal_calendar/blob/master/README.md) | en
+[ZH](./README.md) | EN
 
 An ESP32 based, Portal themed e-ink calendar that can run on AAA batteries for years, with optional weather integration through OpenWeatherMap.
 
