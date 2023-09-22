@@ -6,6 +6,8 @@ CN | [EN](./README-en.md)
 
 看到这个项目想着感觉更加适合我们的黄历，考虑到自己家里都是过农历生日，还有看黄历的习惯，打算就做一个电子黄历
 
+![lunar calendar](./img/lunar.png)
+
 - [Portal-Calendar-py](#portal-calendar-py)
   * [目录结构](#目录结构)
   * [材料](#材料)
