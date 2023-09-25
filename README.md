@@ -6,7 +6,7 @@ CN | [EN](./README-en.md)
 
 这是一个墨水屏电子日历的项目，原项目地址：[Portal Calendar](https://github.com/wuspy/portal_calendar)
 
-[InkCalendar](https://github.com/13Bytes/eInkCalendar)则是reddit上发布这个项目的第一个，也是motivated了Portal Calendar这个项目，但是InkCalendar项目用到的是Raspberry Pi 3b来驱动整个项目，而且需要一直供电，作者本人也觉得只用来处理日历有点杀鸡焉用牛刀了。
+[InkCalendar](https://github.com/13Bytes/eInkCalendar)则是reddit上发布这个项目的第一个，也是motivated了Portal Calendar这个项目，但是InkCalendar项目用到的是Raspberry Pi 3b来驱动整个项目，而且需要一直供电，作者本人也觉得只用来处理日历有点杀鸡焉用牛刀了。当然好处在于可以直接参考微雪提供的python驱动。
 
 看到这个项目想着感觉更加适合我们的黄历，考虑到自己家里都是过农历生日，还有看黄历的习惯，打算就做一个电子黄历
 
@@ -27,7 +27,7 @@ CN | [EN](./README-en.md)
 
 ![](./img/display-zh.png)
 
-- **EzSBC ESP32 breakout board** esp32开发板，随便搜索，比较随意，毕竟esp32比Raspberry Pi 3b便宜的不是一星半点
+- **EzSBC ESP32 breakout board** esp32开发板，随便搜索，比较随意，毕竟esp32比Raspberry Pi 3b便宜的不是一星半点。也可以选择微雪提供的esp32模块，这样就不用使用e-paper driver hat了。
 
 - **4xAAA battery holder** 电池盒，淘宝搜索即可(**AAA电池**是一种美国的干电池标准，**7号电池**标准与其兼容)
 
@@ -50,7 +50,7 @@ CN | [EN](./README-en.md)
 
 ### MicroPython
 
-1. 坏消息是微雪没有提供micropyton的驱动，好消息找到一个[博主XZH100](https://www.kechuang.org/t/88873)自己写的驱动，可以在他的基础上学习修改，感谢感谢大佬。当然也可以参考微雪给[Raspberry写的python驱动]( https://www.waveshare.net/w/upload/7/71/E-Paper_code.zip)，根据这个改成micropython支持的代码。
+1. 坏消息是微雪没有提供micropyton的驱动，好消息是可以参考微雪给[Raspberry写的python驱动]( https://www.waveshare.net/w/upload/7/71/E-Paper_code.zip)，根据这个改成micropython支持的代码。
 2. ntp时间同步需要使用[ntptime模块](https://github.com/micropython/micropython-lib/blob/v1.20.0/micropython/net/ntptime/ntptime.py)，但是ntptime模块，暂时不支持timezone，使用的是UTC时间。要想支持timezone，参考[labplus](https://github.com/labplus-cn)设计的[mPython板子](https://mpython.readthedocs.io/zh/master/)中[ntptime的实现](https://github.com/labplus-cn/mpython/blob/018626912edc47db2a7cb35a63509d5ca1517508/port/modules/ntptime.py)细节
 1. micropython提供的[urequests模块]()，具体实现是通过micropython的require()导入自己实现的[requests模块](https://github.com/micropython/micropython-lib/blob/master/python-ecosys/requests/requests/__init__.py)，功能简单，不会像python的requests库那么强大
 
@@ -68,7 +68,7 @@ CN | [EN](./README-en.md)
 
 1. 黄历内容的展示，也就是”宜“，”忌“这些内容
 2. 生日提示，某某还有几天生日。
-3. 当前农历生肖图像展示
+3. 农历生肖图像展示
 
 
 ## 其他
