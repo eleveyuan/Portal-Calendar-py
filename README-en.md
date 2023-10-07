@@ -40,7 +40,7 @@ But the big problem is no enough docs. sometime we should read some source code.
 2. If we want to support Timezone, we'd better check the code writen by [mPython board](https://github.com/labplus-cn). Micropython's [ntptime](https://github.com/micropython/micropython-lib/blob/master/micropython/net/ntptime/ntptime.py) module doee not implement this function.
 3. In this project, we must query some requests for network resource(API). Micropython provide a [urequests](https://makeblock-micropython-api.readthedocs.io/en/latest/public_library/Third-party-libraries/urequests.html) module can work for it, but it is not as good as Requests
 
-### Addition
+### Features
 Add some functions based on the original project
 
 1. Show content of lunar calender, eg. ‘宜’(some activities you can do), ‘忌’(some activities you can't)
