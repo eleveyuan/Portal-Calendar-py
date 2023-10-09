@@ -13,11 +13,11 @@ python cut_zodiac.py
 
 There is two way to generate Glyphs I ever tried
 
-**First** use software which can generate Glyphs
+**1.** use software which can generate Glyphs
 
 ![](../img/software.png)
 
-**Second** use python code provided by [wuspy/portal_calendar](https://github.com/wuspy/portal_calendar) (resources/build_font.py), but i rewriten it for my need. 
+**2.** or use python code provided by [wuspy/portal_calendar](https://github.com/wuspy/portal_calendar) (resources/build_font.py), but i rewriten it for my need. 
 
 [wuspy/portal_calendar](https://github.com/wuspy/portal_calendar#bill-of-materials) mentioned waveshare e-paper is intended only for 2-greay level. He make some hacks to support 4-grey level. But this can't suit for every e-paper. I use 1-bits mode(0 for black, 1 for white) in this project.
 
