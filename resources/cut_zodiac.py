@@ -1,3 +1,6 @@
+import argparse
+import os
+
 from PIL import Image
 
 
@@ -57,21 +60,28 @@ def cut_pic(image):
     return res_img_list
 
 
-def save_img(img_list, path='./'):
-    idx = 1
+def save_img(img_list, dir='./'):
+    idx = 0
     max_width = 0
     max_height = 0
+    name_list = ['rat', 'ow', 'tiger', 'rabbit', 'dragon', 'snake', 'horse', 'goat', 'monkey', 'rooster', 'dog', 'pig']
     for img in img_list:
         if img.width > max_width:
             max_width = img.width
         if img.height > max_height:
             max_height = img.height
-        img.save(path + str(idx) + '.png', 'PNG')
-        img.save(path + str(idx) + '.bmp', 'BMP')
+        img.save(os.path.join(dir, name_list[idx] + '.png'), 'PNG')
+        img.save(os.path.join(dir, name_list[idx] + '.bmp'), 'BMP')
         idx += 1
     print('max_width={}, max_height={}'.format(max_width, max_height))
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("dir", type=str, default='./', help="dir of the image to be saved")
+args = parser.parse_args()
+
+image_dir = args.dir
+
 img = Image.open('zodiac.png')
 img_list = cut_pic(img)
-save_img(img_list)
+save_img(img_list, image_dir)

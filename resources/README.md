@@ -33,6 +33,6 @@ There is two way to generate Glyphs I ever tried
 python build_font.py ./SmileySans-Oblique.ttf -name smiley320 -size 320 -ranges 1,2,3,4,5,6,7 -fg=0 -bg=255
 ```
 
-# build images
+### build images
 
 It's pretty simple for building image. 
