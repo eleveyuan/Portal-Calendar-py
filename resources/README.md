@@ -2,6 +2,9 @@
 
 This readme descripe some functions for each python file.
 
+**if you don't want to waste time for reading this readme, just run shell file(build_all.sh)**
+
+
 ### Picture cropping
 Zodiac picutre(zodiac.png) is download from [图精灵/616pic](https://616pic.com/sucai/14nixpq7z.html), and it's only for this project, **not for commercial use**. 
 Get BMP of each chinese zodiac for this pic, run this command line:
@@ -9,7 +12,7 @@ Get BMP of each chinese zodiac for this pic, run this command line:
 python cut_zodiac.py
 ```
 
-### Smiley fonts
+### build fonts
 
 There is two way to generate Glyphs I ever tried
 
@@ -27,7 +30,9 @@ There is two way to generate Glyphs I ever tried
 > level isn't critical to get things to look good, but I've only tried this on two of these displays, and I can't guarantee yours will look perfect.
 
 ``` shell
-python build_font.py ./SmileySans-Oblique.ttf -name smiley32 -size 32 -ranges 月,日,星,期,周,正,腊,冬,寒,一,二,三,四,五,六,七,八,九,十,初,宜,忌,甲,乙,丙,丁,戊,己,庚,辛,壬,癸,子,丑,寅,卯,辰,巳,午,未,申,酉,戌,亥,鼠,牛,虎,兔,龙,蛇,马,羊,猴,鸡,狗,猪,(,),（,） -fg=0 -bg=255
-
 python build_font.py ./SmileySans-Oblique.ttf -name smiley320 -size 320 -ranges 1,2,3,4,5,6,7 -fg=0 -bg=255
 ```
+
+# build images
+
+It's pretty simple for building image. 
