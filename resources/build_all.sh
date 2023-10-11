@@ -5,20 +5,62 @@ python build_font.py ./SmileySans-Oblique.ttf -name smiley320 -size 320 -ranges 
 # ****************************** cropping zodiac image ******************************
 python cut_zodiac.py ./
 
+# ****************************** split image ******************************
+magick xc:red xc:white xc:black +append palette.gif
+magick rat.png -remap palette.gif res_rat.png
+magick ow.png -remap palette.gif res_ow.png
+magick tiger.png -remap palette.gif res_tiger.png
+magick rabbit.png -remap palette.gif res_rabbit.png
+magick dragon.png -remap palette.gif res_dragon.png
+magick snake.png -remap palette.gif res_snake.png
+magick horse.png -remap palette.gif res_horse.png
+magick goat.png -remap palette.gif res_goat.png
+magick monkey.png -remap palette.gif res_monkey.png
+magick rooster.png -remap palette.gif res_rooster.png
+magick dog.png -remap palette.gif res_dog.png
+magick pig.png -remap palette.gif res_pig.png
+
+python split_image.py res_rat.png ./
+python split_image.py res_ow.png ./
+python split_image.py res_tiger.png ./
+python split_image.py res_rabbit.png ./
+python split_image.py res_dragon.png ./
+python split_image.py res_snake.png ./
+python split_image.py res_horse.png ./
+python split_image.py res_goat.png ./
+python split_image.py res_monkey.png ./
+python split_image.py res_rooster.png ./
+python split_image.py res_dog.png ./
+python split_image.py res_pig.png ./
+
 # ****************************** build image ******************************
 # build image for chinese zodiac
-python build_image.py rat.png ./
-python build_image.py ow.png ./
-python build_image.py tiger.png ./
-python build_image.py rabbit.png ./
-python build_image.py dragon.png ./
-python build_image.py snake.png ./
-python build_image.py horse.png ./
-python build_image.py goat.png ./
-python build_image.py monkey.png ./
-python build_image.py rooster.png ./
-python build_image.py dog.png ./
-python build_image.py pig.png ./
+python build_image.py res_rat_black.bmp ./
+python build_image.py res_ow_black.bmp ./
+python build_image.py res_tiger_black.bmp ./
+python build_image.py res_rabbit_black.bmp ./
+python build_image.py res_dragon_black.bmp ./
+python build_image.py res_snake_black.bmp ./
+python build_image.py res_horse_black.bmp ./
+python build_image.py res_goat_black.bmp ./
+python build_image.py res_monkey_black.bmp ./
+python build_image.py res_rooster_black.bmp ./
+python build_image.py res_dog_black.bmp ./
+python build_image.py res_pig_black.bmp ./
+
+python build_image.py res_rat_red.bmp ./
+python build_image.py res_ow_red.bmp ./
+python build_image.py res_tiger_red.bmp ./
+python build_image.py res_rabbit_red.bmp ./
+python build_image.py res_dragon_red.bmp ./
+python build_image.py res_snake_red.bmp ./
+python build_image.py res_horse_red.bmp ./
+python build_image.py res_goat_red.bmp ./
+python build_image.py res_monkey_red.bmp ./
+python build_image.py res_rooster_red.bmp ./
+python build_image.py res_dog_red.bmp ./
+python build_image.py res_pig_red.bmp ./
+
 # build image for weather icon
 python build_image.py weather_cloudy.gif ./
 python build_image.py weather_day_clear.gif ./
