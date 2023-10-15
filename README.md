@@ -6,7 +6,7 @@ CN | [EN](./README-en.md)
 
 这是一个墨水屏电子日历的项目，原项目地址：[Portal Calendar](https://github.com/wuspy/portal_calendar)
 
-[InkCalendar](https://github.com/13Bytes/eInkCalendar)则是reddit上发布这个项目的第一个，也是motivated了Portal Calendar这个项目，但是InkCalendar项目用到的是Raspberry Pi 3b来驱动整个项目，而且需要一直供电，作者本人也觉得只用来处理日历有点杀鸡焉用牛刀了。当然好处在于可以直接参考微雪提供的python驱动。
+[InkCalendar](https://github.com/13Bytes/eInkCalendar)则是reddit上发布这个项目的第一个，也是motivated了Portal Calendar这个项目，但是InkCalendar项目用到的是Raspberry Pi 3b来驱动整个项目，而且需要一直usb供电，作者本人也觉得只用来处理日历有点杀鸡焉用牛刀了。当然好处在于可以直接参考微雪提供的python驱动。
 
 看到这个项目想着感觉更加适合我们的黄历，考虑到自己家里都是过农历生日，还有看黄历的习惯，打算就做一个电子黄历
 
@@ -33,7 +33,7 @@ CN | [EN](./README-en.md)
 
 - **9x M3x8 cap head screws** M3x8帽头螺钉，依旧淘宝搜索一大堆
 
-- **frame** 使用3d打印出来，淘宝3d打印pla材质，价格略贵（~￥150）😓，下图是打印出来的框架
+- **frame** 使用3d打印出来，淘宝3d打印pla材质，下图是打印出来的框架
 
 ![](./img/frame.png)
 
@@ -82,7 +82,7 @@ CN | [EN](./README-en.md)
 4. 字体上选择得意黑
 
 
-### 拓展内容
+### Features
 
 在原项目基础上拓展一些内容
 
