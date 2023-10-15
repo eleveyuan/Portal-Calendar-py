@@ -5,11 +5,18 @@ This readme descripe some functions for each python file.
 **if you don't want to waste time for reading this readme, just run shell file(build_all.sh)**
 
 
-### Picture cropping
+### Picture cropping and splitting
 Zodiac picutre(zodiac.png) is download from [图精灵/616pic](https://616pic.com/sucai/14nixpq7z.html), and it's only for this project, **not for commercial use**. 
 Get BMP of each chinese zodiac for this pic, run this command line:
 ``` shell
-python cut_zodiac.py
+python cut_zodiac.py ./
+```
+
+after cropping picture, we have to split picutre into two parts(red parts and black part). specifically, see this process in [issue #2](https://github.com/eleveyuan/Portal-Calendar-py/issues/2)
+``` shell
+magick xc:red xc:white xc:black +append palette.gif
+magick rat.png -remap palette.gif res_rat.png
+python split_image.py res_rat.png
 ```
 
 ### build fonts
