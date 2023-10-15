@@ -48,6 +48,26 @@ CN | [EN](./README-en.md)
 
 难题在于micropython的文档还是不够的，有些地方需要读读源码。希望社区能快速发展起来~
 
+### Hardware connection
+
+[E-Paper Driver HAT](https://www.waveshare.net/wiki/E-Paper_Driver_HAT)进行了升级修改：
+1. RST引脚现在只控制复位，不再控制电源通断
+2. **增加一个PWR引脚**，用来控制电源通断
+
+所以在这里，我把VCC改成接5v电压，PWR接3.3v电压
+
+| e-paper hat | | esp32 |
+| ----- | --- | ---- |
+| VCC (Grey) | <--> | 5v |
+| GND (Brown) | <--> | GND |
+| DIN (Blue) | <--> | IO13 |
+| CLK (Yellow) | <--> | IO14 |
+| CS (Orange) | <--> | IO15 |
+| DC (Green) | <--> | IO23 |
+| RST (White) | <--> | IO33 |
+| BUSY (Purple)	 | <--> | IO27 |
+| PWR (RED) | <--> | 3.3v |
+
 ### MicroPython
 
 1. 坏消息是微雪没有提供micropyton的驱动，好消息是可以参考微雪给[Raspberry写的python驱动]( https://www.waveshare.net/w/upload/7/71/E-Paper_code.zip)，根据这个改成micropython支持的代码。

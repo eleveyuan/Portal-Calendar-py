@@ -35,6 +35,26 @@ Actually, in this project, it's not a computationally intensive projects. Microp
 
 But the big problem is no enough docs. sometime we should read some source code.
 
+### Hardware connection
+
+[E-Paper Driver HAT](https://www.waveshare.com/wiki/E-Paper_Driver_HAT) has changed it designs：
+1. RST pin now is for reset control, and not for power on/off.
+2. Add **a new PWR pin** for power on/off.
+
+So I changed VCC pin to connect to 5v and PWR pin to 3.3v.
+
+| e-paper hat | | esp32 |
+| ----- | --- | ---- |
+| VCC (Grey) | <--> | 5v |
+| GND (Brown) | <--> | GND |
+| DIN (Blue) | <--> | IO13 |
+| CLK (Yellow) | <--> | IO14 |
+| CS (Orange) | <--> | IO15 |
+| DC (Green) | <--> | IO23 |
+| RST (White) | <--> | IO33 |
+| BUSY (Purple)	 | <--> | IO27 |
+| PWR (RED) | <--> | 3.3v |
+
 ### Micropython
 1. Waveshare does not provide a micropython driver. But we learn and rewrite the python driver code in [waveshare repositore](https://github.com/waveshareteam/e-Paper/tree/master/RaspberryPi_JetsonNano/python)
 2. If we want to support Timezone, we'd better check the code writen by [mPython board](https://github.com/labplus-cn). Micropython's [ntptime](https://github.com/micropython/micropython-lib/blob/master/micropython/net/ntptime/ntptime.py) module doee not implement this function.
