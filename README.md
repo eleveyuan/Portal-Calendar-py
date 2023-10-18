@@ -74,7 +74,7 @@ CN | [EN](./README-en.md)
 
 ### MicroPython
 
-1. 坏消息是微雪没有提供micropyton的驱动，好消息是可以参考微雪给[Raspberry写的python驱动]( https://www.waveshare.net/w/upload/7/71/E-Paper_code.zip)，根据这个改成micropython支持的代码。
+1. 坏消息是微雪没有提供micropyton的驱动，好消息是可以参考微雪给[Raspberry写的python驱动]( https://www.waveshare.net/w/upload/7/71/E-Paper_code.zip)或者[esp32的arduino示例代码](https://www.waveshare.net/w/upload/5/50/E-Paper_ESP32_Driver_Board_Code.7z)，根据这个改成micropython支持的代码。
 2. ntp时间同步需要使用[ntptime模块](https://github.com/micropython/micropython-lib/blob/v1.20.0/micropython/net/ntptime/ntptime.py)，但是ntptime模块，暂时不支持timezone，使用的是UTC时间。要想支持timezone，参考[labplus](https://github.com/labplus-cn)设计的[mPython板子](https://mpython.readthedocs.io/zh/master/)中[ntptime的实现](https://github.com/labplus-cn/mpython/blob/018626912edc47db2a7cb35a63509d5ca1517508/port/modules/ntptime.py)细节
 1. micropython提供的[urequests模块]()，具体实现是通过micropython的require()导入自己实现的[requests模块](https://github.com/micropython/micropython-lib/blob/master/python-ecosys/requests/requests/__init__.py)，功能简单，不会像python的requests库那么强大
 

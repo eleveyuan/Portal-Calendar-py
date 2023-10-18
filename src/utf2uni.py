@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 def encode_get_utf8_size(utf):
     if utf < 0x80:
         return 1

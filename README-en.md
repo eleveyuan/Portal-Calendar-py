@@ -59,7 +59,7 @@ So I changed VCC pin to connect to 5v and PWR pin to 3.3v.
 | PWR (RED) | <--> | 3.3v |
 
 ### Micropython
-1. Waveshare does not provide a micropython driver. But we learn and rewrite the python driver code in [waveshare repositore](https://github.com/waveshareteam/e-Paper/tree/master/RaspberryPi_JetsonNano/python)
+1. Waveshare does not provide a micropython driver. But we learn and rewrite the python driver code in [waveshare repositore](https://github.com/waveshareteam/e-Paper/tree/master/RaspberryPi_JetsonNano/python) or [arduino sample demo for esp32](https://files.waveshare.com/upload/5/50/E-Paper_ESP32_Driver_Board_Code.7z)
 2. If we want to support Timezone, we'd better check the code writen by [mPython board](https://github.com/labplus-cn). Micropython's [ntptime](https://github.com/micropython/micropython-lib/blob/master/micropython/net/ntptime/ntptime.py) module doee not implement this function.
 3. In this project, we must query some requests for network resource(API). Micropython provide a [urequests](https://makeblock-micropython-api.readthedocs.io/en/latest/public_library/Third-party-libraries/urequests.html) module can work for it, but it is not as good as Requests
 
