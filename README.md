@@ -1,5 +1,9 @@
 # Portal-Calendar-py
 
+![](https://img.shields.io/badge/MicroPython-language?style=flat-square&label=language) ![](https://img.shields.io/badge/esp32-platform?style=flat-square&label=platform&color=lightgrey
+)
+
+
 CN | [EN](./README-en.md)
 
 ## Movtivation
