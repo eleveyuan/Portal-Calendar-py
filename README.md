@@ -33,9 +33,9 @@ CN | [EN](./README-en.md)
 
 - **EzSBC ESP32 breakout board** esp32开发板，随便搜索，比较随意，毕竟esp32比Raspberry Pi 3b便宜的不是一星半点。也可以选择微雪提供的esp32模块，这样就不用使用e-paper driver hat了。
 
-- **4xAAA battery holder** 电池盒，淘宝搜索即可(**AAA电池**是一种美国的干电池标准，**7号电池**标准与其兼容)
+- **4xAAA battery holder** 电池盒，淘宝搜索即可(**AAA电池**是一种美国的干电池标准，**7号电池**标准与其兼容)，唯一强迫症就是没有搜到完美的加后盖的电池盒，有后盖的宽度变宽了，而且盖后盖的方式以及方向有点接受不了。
 
-- **9x M3x8 cap head screws** M3x8帽头螺钉，依旧淘宝搜索一大堆
+- **9x M3x8 cap head screws** M3x8帽头螺钉，依旧淘宝搜索一大堆（大概2块钱100个）
 
 - **frame** 使用3d打印出来，淘宝3d打印pla材质，下图是打印出来的框架
 
@@ -113,11 +113,11 @@ CN | [EN](./README-en.md)
 
 这里采用聚合数据提供的api
 
-黄历：https://www.juhe.cn/docs/api/id/65 （每天免费调用50次，顺便一提这个api返回json键值用到拼音）
+万年历：https://www.juhe.cn/docs/api/id/177 （每天免费调用50次）
 
 天气：https://www.juhe.cn/docs/api/id/73 （每天免费调用50次）
 
-![api](./img/api.png)
+![api](./img/api.jpg)
 
 
 ### 字体

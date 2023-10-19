@@ -78,10 +78,10 @@ When we use this screen, I think we'd better read the [precautions](https://www.
 ### API
 We get data by querying [Juhe Api](juhe.cn)
 
-1. lunar calendar api: https://www.juhe.cn/docs/api/id/65 (50 times per day for free)
+1. lunar calendar api: https://www.juhe.cn/docs/api/id/177 (50 times per day for free)
 2. weather api: https://www.juhe.cn/docs/api/id/73 (50 times per day for free)
 
-![](img/api.png)
+![](img/api.jpg)
 
 ### font
 [Smiley-sans/得意黑](https://github.com/atelier-anchor/smiley-sans) is a open source fonts we use in this project

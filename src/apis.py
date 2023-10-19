@@ -6,6 +6,7 @@ import ujson as json
 
 from config import OPENWEATHERMAP_API_KEY, OPENLUNAR_API_KEY
 
+
 def get_lunar(url, date):
     lunar = {}
     r = requests.get(url + '?key={}&date={}'.format(OPENLUNAR_API_KEY, date))
@@ -13,12 +14,14 @@ def get_lunar(url, date):
         try:
             content = json.loads(r.content)
             result = content['result']
-            errno = content['error_code']
-            if errno == 0:
-                lunar['yangli'] = result['yangli']
-                lunar['yinli'] = result['yinli']
-                lunar['yi'] = result['yi']
-                lunar['ji'] = result['ji']
+            errorno = content['error_code']
+            if errorno == 0:
+                lunar['weekday'] = result['data']['weekday']
+                lunar['lunar_year'] = result['data']['lunarYear']
+                lunar['zodiac'] = result['data']['animalsYear']
+                lunar['lunar'] = result['data']['lunar']
+                lunar['suit'] = result['data']['suit']
+                lunar['avoid'] = result['data']['avoid']
                 
                 return lunar
             else:
@@ -65,7 +68,8 @@ def get_weather(url, city, wids):
                     future.append({
                         'date': el['date'], 
                         'temperature': el['temperature'].strip('\u2103').split('/'), 
-                        'weather': wids[el['wid']['day']],
+                        # 1: day, 0: night
+                        'weather': { 1: wids[el['wid']['day']], 0: wids[el['wid']['night']]},
                     })
                     
                 weather['future'] = future
@@ -77,3 +81,23 @@ def get_weather(url, city, wids):
     else:
         print('query error')
 
+def parse_weather_condition_id(id):
+    if id == "00":
+        return "CLEAR"  # 晴天
+    elif id == "01":
+        return "FEW_CLOUDS"  # 多云
+    elif id == "02":
+        return "OVERCAST_CLOUDS"  # 阴天
+    elif id == "03":
+        return "SHOWERS"  # 阵雨
+    elif id in ["07", "08", "09", "10", "11", "12", "21", "22", "23", "24", "25"]:
+        return "RAINS"  # 雨天
+    elif id in ["04", "05"]:
+        return "THUNDERSTORMS"  # 雷雨
+    elif id in ["06", "13", "14", "15", "16", "17", "19", "26", "27", "28"]:
+        return "SNOW"  # 雪天
+    elif id in ["18", "53"]:
+        return "FOG"  # 雾霾
+    else:
+        return "UNKOWN"
+    
