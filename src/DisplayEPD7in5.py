@@ -3,6 +3,9 @@
 from machine import Pin
 from time import sleep_ms
 
+BLACK = 0
+WHITE = 1
+RED = WHITE
 
 EPD_WIDTH       = 800
 EPD_HEIGHT      = 480
@@ -38,7 +41,6 @@ class DisplayEPD7in5:
         self.busy = Pin(busy, Pin.IN)
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
-        self.pages = self.height//8
         self.rotation = ROTATION_0
 
         self.init()
@@ -113,20 +115,26 @@ class DisplayEPD7in5:
         self.send_command(0x10)  # DTM1
         for i in range(0, self.width/8*self.height):
             self.send_data(0xff)
-            
+        
         self.send_command(0x13)  # DTM2
         for i in range(0, self.width/8*self.height):
             self.send_data(0x00)
                 
         self.send_command(0x12)
         sleep_ms(100)
-        self.read_busy() 
-
-    def sleep(self):
-        self.send_command(0x02) # POWER_OFF
         self.read_busy()
         
-        self.send_command(0x07) # DEEP_SLEEP
+    def clear_frame(self, frame_buffer_black, frame_buffer_red=None):
+        for i in range(int(self.width * self.height / 8)):
+            frame_buffer_black[i] = 0xFF
+            if frame_buffer_red is not None:
+                frame_buffer_red[i] = 0x00
+
+    def sleep(self):
+        self.send_command(0x02)  # POWER_OFF
+        self.read_busy()
+        
+        self.send_command(0x07)  # DEEP_SLEEP
         self.send_data(0XA5)
 
         sleep_ms(2000)
@@ -148,38 +156,38 @@ class DisplayEPD7in5:
             self.width = EPD_HEIGHT
             self.height = EPD_WIDTH
 
-    def set_pixel(self, frame_buffer, x, y, colored):
+    def set_pixel(self, frame_buffer, x, y, color):
         if x < 0 or x >= self.width or y < 0 or y >= self.height:
             return
         if self.rotation == ROTATION_0:
-            self.set_absolute_pixel(frame_buffer, x, y, colored)
+            self.set_absolute_pixel(frame_buffer, x, y, color)
         elif self.rotation == ROTATION_90:
             t = x
             x = EPD_WIDTH - y
             y = t
-            self.set_absolute_pixel(frame_buffer, x, y, colored)
+            self.set_absolute_pixel(frame_buffer, x, y, color)
         elif self.rotation == ROTATION_180:
             x = EPD_WIDTH - x
             y = EPD_HEIGHT- y
-            self.set_absolute_pixel(frame_buffer, x, y, colored)
+            self.set_absolute_pixel(frame_buffer, x, y, color)
         elif self.rotation == ROTATION_270:
             t = x
             x = y
             y = EPD_HEIGHT - t
-            self.set_absolute_pixel(frame_buffer, x, y, colored)
+            self.set_absolute_pixel(frame_buffer, x, y, color)
     
-    def set_absolute_pixel(self, frame_buffer, x, y, colored):
+    def set_absolute_pixel(self, frame_buffer, x, y, color):
         # To avoid display orientation effects
         # use EPD_WIDTH instead of self.width
         # use EPD_HEIGHT instead of self.height
         if (x < 0 or x >= EPD_WIDTH or y < 0 or y >= EPD_HEIGHT):
             return
-        if (colored):
-            frame_buffer[(x + y * EPD_WIDTH) // 8] &= ~(0x80 >> (x % 8))
+        if color:  
+            frame_buffer[(x + y * EPD_WIDTH) // 8] |= 0x80 >> (x % 8)  # white == 1
         else:
-            frame_buffer[(x + y * EPD_WIDTH) // 8] |= 0x80 >> (x % 8)
+            frame_buffer[(x + y * EPD_WIDTH) // 8] &= ~(0x80 >> (x % 8))  # black == 0
     
-    def align(self, x, y, width, height, align):
+    def _align(self, x, y, width, height, align):
         if align & _ALIGN_HCENTER:
             x -= width // 2
         elif align & _ALIGN_RIGHT:
@@ -197,12 +205,16 @@ class DisplayEPD7in5:
             sleep_ms(2)
             for i in range(0, self.width * self.height // 8):
                 self.send_data(black_image[i])
-        
+            sleep_ms(2)
+            
+            self.send_command(0x92)  # Partial Out (PTOUT)
+            
         if red_image != None:
             self.send_command(0x13)
             sleep_ms(2)
             for i in range(0, self.width * self.height // 8):
                 self.send_data(red_image[i])
+            sleep_ms(2)
 
         self.send_command(0x12)
         sleep_ms(100)
@@ -211,24 +223,23 @@ class DisplayEPD7in5:
     """
         drawing functions
     """
-    def draw_hline(self, frame_buffer, x, y, length, thickness, colored, align):
-        x, y = self.align(x, y, length, thickness, align)
+    def draw_hline(self, frame_buffer, x, y, length, thickness, color, align):
+        x, y = self._align(x, y, length, thickness, align)
         for j in range(y, y + thickness):
             for i in range(x, x + length):
-                self.set_pixel(frame_buffer, i, j, colored) 
+                self.set_pixel(frame_buffer, i, j, color) 
     
-    def draw_vline(self, frame_buffer, x, y, length, thickness, colored, align):
-        x, y = self.algin(x, y, thickness, length, align)
+    def draw_vline(self, frame_buffer, x, y, length, thickness, color, align):
+        x, y = self._align(x, y, thickness, length, align)
         for j in range(y, y + length):
             for i in range(x, x + thickness):
-                self.set_pixel(frame_buffer, i, j, colored)
+                self.set_pixel(frame_buffer, i, j, color)
 
-    def draw_image(self, frame_buffer, x, y, black_image, red_image, align):
-        self.align(x, y, black_image.width, black_image.height, align) 
-        self.align(x, y, red_image.width, red_image.height, align) 
-        for j in range(0, black_image.height):
-            for i in range(0, black_image.width):
-                color = black_image[i][j]
+    def draw_image(self, frame_buffer, x, y, image, align):
+        self._align(x, y, image.width, image.height, align) 
+        for j in range(0, image.height):
+            for i in range(0, image.width):
+                color = image[i][j]
                 self.set_pixel(frame_buffer, x+i, y+j, color)
     
     def draw_text(self, line, font, x, y, align):
@@ -236,3 +247,6 @@ class DisplayEPD7in5:
     
     def draw_multiline_text(self, lines, font, x, y, align):
         pass 
+
+
+
