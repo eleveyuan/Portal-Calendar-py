@@ -31,7 +31,7 @@ CN | [EN](./README-en.md)
 
 ![](./img/display-zh.png)
 
-- **EzSBC ESP32 breakout board** esp32开发板，随便搜索，比较随意，毕竟esp32比Raspberry Pi 3b便宜的不是一星半点。也可以选择微雪提供的esp32模块，这样就不用使用e-paper driver hat了。
+- **ESP32** esp32开发板，建议使用esp32 wrover或者esp32-s3，主要是在更新红黑内容时，两个屏幕大小的bytearray数组以及中文的显示需要spiram（flash大小不足[issues 3](https://github.com/eleveyuan/Portal-Calendar-py/issues/3)）。
 
 - **4xAAA battery holder** 电池盒，淘宝搜索即可(**AAA电池**是一种美国的干电池标准，**7号电池**标准与其兼容)，唯一强迫症就是没有搜到完美的加后盖的电池盒，有后盖的宽度变宽了，而且盖后盖的方式以及方向有点接受不了。
 
