@@ -28,6 +28,8 @@ def time(host):
 # There's currently no timezone support in MicroPython, so
 # utime.localtime() will return UTC time (as if it was .gmtime())
 # add timezone org,default 8
+# changed: second paramater supports list of servers
+# checked on wokwi ESP32 Simulator
 def settime(timezone=8, servers=['ntp.ntsc.ac.cn']):
     import machine
     import utime
