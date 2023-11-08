@@ -7,7 +7,6 @@ import io
 from os import path
 import argparse
 
-import numpy as np
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
 
@@ -121,7 +120,12 @@ parser.add_argument("-fg", type=int, required=False, default=0, help="The foregr
 parser.add_argument("-bg", type=int, required=False, default=255, help="The background color, 0-255, defaults to 255 (white)")
 args = parser.parse_args()
 
-code_point_ranges = list(map(lambda r: r.split('-', 1), args.ranges.split(',')))
+if args.ranges == '*':
+    with open('zh-hans3500.txt', 'r', encoding='utf8') as fr:
+        lines = ''.join([l.strip() for l in fr.readlines()])
+        code_point_ranges = list(map(lambda r: r.split(' ', 1), list(lines)))
+else:
+    code_point_ranges = list(map(lambda r: r.split('-', 1), args.ranges.split(',')))
 font_path = args.font  # dir/to/SmileySans-Oblique.ttf
 font_name = args.name  # smiley24px
 font_size = args.size
@@ -131,10 +135,11 @@ bg_color = args.bg
 output_file_name = "{}/{}.py".format(path.dirname(font_path), font_name)
 font_cname = "FONT_{}".format(font_name.upper().replace(".", "_").replace("-", "_").replace(" ", "_"))
 
-print("Building font '{}' at size {}px with ranges {}".format(font_path, font_size, code_point_ranges))
+print("Building font '{}' at size {}px with ranges {}".format(font_path, font_size, args.ranges))
 
 font = ImageFont.truetype(font_path, font_size)  # TTF: TrueType Font
 # https://stackoverflow.com/questions/27631736/meaning-of-top-ascent-baseline-descent-bottom-and-leading-in-androids-font
+# https://pillow.readthedocs.io/en/stable/handbook/text-anchors.html
 ascent, descent = font.getmetrics()
 
 font_tables = list(map(lambda table: table.cmap.keys(), TTFont(font_path)['cmap'].tables))
@@ -167,7 +172,7 @@ for code_point in code_point_ranges:
         draw = ImageDraw.Draw(image)
         draw.text((-glyph.left, -glyph.top), ''.join(code_point), font=font, fill=fg_color)
         # image.show() # for checking th char
-        char_output_lines, char_byte_count = compile_image(image)
+        char_output_lines, char_byte_count, width, height, pad = compile_image(image)
         glyph.set_data(char_output_lines)
         output_lines.append("// '{}'".format(uni))
         output_lines += char_output_lines

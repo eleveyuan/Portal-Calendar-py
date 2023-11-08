@@ -11,12 +11,18 @@ def compile_image(image):
     pixel = image.load()
     width, height = image.size
     bitmap = []
+    new_width, pad = width, 0
+    if width % 8 != 0:
+        new_width = (int(width/8)+1)*8
+        pad = new_width - width
     for h in range(height):
-        for w in range(width):
-            if pixel[w, h] > 0:
+        for w in range(new_width):
+            if w < width and pixel[w, h] > 0:
                 bitmap.append('0')
-            else:
+            elif w < width and not pixel[w, h] > 0 :
                 bitmap.append('1')
+            else:
+                bitmap.append('0')
     bitmap = ''.join(bitmap)
     for x in range(len(bitmap) >> 3):
         temp = bitmap[8 * x: 8 * (x + 1)]
@@ -26,4 +32,4 @@ def compile_image(image):
         output_lines[-1] += "0x{:02X},".format(int(temp, 2))
         byte_count += 1
         inline_count += 1
-    return output_lines, byte_count
+    return output_lines, byte_count, new_width, height, pad

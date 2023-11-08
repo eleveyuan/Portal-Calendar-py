@@ -20,10 +20,11 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
 colors = np.where(hist > 5000)
 img_number = 0
+platte = ['black', 'red']
 
 for color in colors[0]:
     print(color)
     split_image = img.copy()
     split_image[np.where(gray != color)] = 255
-    cv2.imwrite(result_name + str(img_number)+".bmp", split_image)
+    cv2.imwrite(result_name + '_' + platte[img_number]+".bmp", split_image)
     img_number += 1
