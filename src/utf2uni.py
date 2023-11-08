@@ -67,3 +67,7 @@ def encode_utf8_to_unicode(utf8):
         unic = ((((b5 << 6) + (b6 & 0x3F)) << 24) & 0xFF) | (((b5 << 4) + ((b6 >> 2) & 0x0F) << 16) & 0xFF) | ((((b3 << 2) + ((b4 >> 4) & 0x03)) << 8) & 0xFF) | ((((b1 << 6) & 0x40) + (b2 & 0x3F)) & 0xFF)
 
     return unic
+
+
+def is_space_char(utf):
+    return cp == 0x9 or cp == 0x20 or cp == 0xA0

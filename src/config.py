@@ -27,7 +27,10 @@ api key
     OPENWEATHERMAP_API_KEY: 天气api
     OPENLUNAR_API_KEY: 黄历api
 """
+WEATHER_URL = "http://apis.juhe.cn/simpleWeather/query"
+WEATHER_ID_URL = "http://apis.juhe.cn/simpleWeather/wids"
 OPENWEATHERMAP_API_KEY = ""
+LUNAR_URL = "http://v.juhe.cn/calendar/day"
 OPENLUNAR_API_KEY = ""
 
 """

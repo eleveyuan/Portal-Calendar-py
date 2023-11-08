@@ -83,3 +83,8 @@ def day_internal(lunar1, lunar2):
         return lunar_dt.index(llist1[1]) - lunar_dt.index(llist2[1])
     else:
         return None
+
+
+def is_day_light(t):
+    # a naive way
+    return  6 < t < 18

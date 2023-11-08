@@ -4,10 +4,10 @@
 import urequests as requests
 import ujson as json
 
-from config import OPENWEATHERMAP_API_KEY, OPENLUNAR_API_KEY
+from config import OPENWEATHERMAP_API_KEY, OPENLUNAR_API_KEY, WEATHER_URL, WEATHER_ID_URL, LUNAR_URL
 
 
-def get_lunar(url, date):
+def get_lunar(date, url=LUNAR_URL):
     lunar = {}
     r = requests.get(url + '?key={}&date={}'.format(OPENLUNAR_API_KEY, date))
     if r.content:
@@ -32,7 +32,7 @@ def get_lunar(url, date):
         print('query error')
 
 
-def get_weather_id(url):
+def get_weather_id(url=WEATHER_ID_URL):
     weather_ids = {}
     r = requests.get(url + '?key={}'.format(OPENWEATHERMAP_API_KEY))
     if r.content:
@@ -52,7 +52,7 @@ def get_weather_id(url):
         print('query error')
 
 
-def get_weather(url, city, wids):
+def get_weather(wids, url=WEATHER_URL, city='曲江'):
     weather = {}
     r = requests.get(url + '?key={}&city={}'.format(OPENWEATHERMAP_API_KEY, city))
     if r.content:
@@ -71,7 +71,6 @@ def get_weather(url, city, wids):
                         # 1: day, 0: night
                         'weather': { 1: wids[el['wid']['day']], 0: wids[el['wid']['night']]},
                     })
-                    
                 weather['future'] = future
                 return weather
             else:
