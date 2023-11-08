@@ -3,6 +3,9 @@
 from machine import Pin
 from time import sleep_ms
 
+from utf2uni import encode_get_utf8_size, encode_utf8_to_unicode, is_space_char
+
+
 BLACK = 0
 WHITE = 1
 RED = WHITE
@@ -44,6 +47,12 @@ class DisplayEPD7in5:
         self.rotation = ROTATION_0
 
         self.init()
+
+    def get_height():
+        return self.height
+
+    def get_width():
+        return self.width
     
     def init(self):
         self.reset()
@@ -235,18 +244,65 @@ class DisplayEPD7in5:
             for i in range(x, x + thickness):
                 self.set_pixel(frame_buffer, i, j, color)
 
-    def draw_image(self, frame_buffer, x, y, image, align):
-        self._align(x, y, image.width, image.height, align) 
-        for j in range(0, image.height):
-            for i in range(0, image.width):
-                color = image[i][j]
-                self.set_pixel(frame_buffer, x+i, y+j, color)
+    def draw_image(self, frame_buffer, x, y, image, color, align):
+        x, y = self._align(x, y, image['width'], image['height'], align) 
+        for j in range(0, image['height']):
+            for i in range(0, image['width']):
+                if color == BLACK:
+                    c = image['data'][(i + j *image['width']) // 8] & (0x80 >> (i % 8))
+                    self.set_pixel(frame_buffer, x+i, y+j, c)
+                elif color == RED:
+                    c = (~image['data'][(i + j *image['width']) // 8]) & (0x80 >> (i % 8))
+                    self.set_pixel(frame_buffer, x+i, y+j, c)
     
-    def draw_text(self, line, font, x, y, align):
-        pass 
+    def measure_text(self, line, font, tracking=0):
+        if len(line) == 0:
+            return 0
+        
+        length = 0
+        i, pos = 0, 0
+        while i < len(line):
+            utfbytes = encode_get_utf8_size(line[i])
+            print(hex(utfbytes))
+            uni = encode_utf8_to_unicode(line[i:i + utfbytes])
+            i += utfbytes
+            pos += 1
+            if is_space_char(utfbytes):
+                length += font['space_width']
+            else:
+                length += font['glyphs'][uni]['right']
+        print('pos=', pos, ' length=', length)
+        return length + tracking * (pos - 1)
     
-    def draw_multiline_text(self, lines, font, x, y, align):
-        pass 
-
-
-
+    def draw_text(self, frame_buffer, x, y, line, font, color, align, tracking=0):
+        # https://fonts.google.com/knowledge/glossary/tracking_letter_spacing
+        if align != TOP_LEFT:
+            width = 0
+            # Measurement isn't needed and width isn't used by adjustAligment if horizontal alignment is left
+            if not (align & _ALIGN_LEFT):
+                width = self.measure_text(line, font)
+            x, y = self._align(x, y, width, font['ascent'] + font['descent'], align)
+        i, pos = 0, 0
+        while i < len(line):
+            print('x=', x, ' y=', y)
+            utfbytes = encode_get_utf8_size(line[i])
+            uni = encode_utf8_to_unicode(line[i:i + utfbytes])
+            i += utfbytes
+            pos += 1
+            if is_space_char(utfbytes):
+                x += font['space_width'] + tracking
+            else:
+                char_matrix_image = font['glyphs'][uni]
+                x += char_matrix_image['left']
+                self.draw_image(frame_buffer, x, y + char_matrix_image['top'], char_matrix_image, color, align)
+                x += char_matrix_image['right'] + tracking
+    
+    def draw_multiline_text(self, frame_buffer, x, y, lines, font, color, align, tracking=0, leading=0):
+        # https://fonts.google.com/knowledge/glossary/line_height_leading
+        leading += font.ascent + font.descent
+        if not align & _ALIGN_TOP:
+            x, y = self._align(x, y, 0, leading * len(lines), align)
+        align = align & ~_ALIGN_BOTTOM & ~_ALIGN_VCENTER | _ALIGN_TOP
+        for line in line:
+            self.draw_text(frame_buffer, x, y, line, font, color, align, tracking)
+            y += leading
