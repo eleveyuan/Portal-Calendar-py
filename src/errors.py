@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from config import WIFI_NAME, TIME_ZONE, WEATHER_LOCATION
+from src.config import WIFI_NAME, TIME_ZONE, WEATHER_LOCATION
 
 
 def error(msg):
@@ -42,7 +42,7 @@ def errorInvalidApiKey():
 
     error("""INVALID API KEY
           
-          OpenWeatherMap.org says your API key is invalid.
+          Your API key is invalid.
           You probably have an issue with your configuration.
           Go to your account -> My API Keys and make sure
           the one there matches the one you entered. Or, just
@@ -50,14 +50,4 @@ def errorInvalidApiKey():
         """)
 
 
-def errorInvalidLocation():
-    
-    error("""INVALID WEATHER LOCATION
-          
-        OpenWeatherMap.org couldn't find any results
-        for the weather location you entered. You
-        probably have an issue with your configuration.
-          
-        You Location: {}
-        """.format(WEATHER_LOCATION))
     

@@ -4,7 +4,14 @@
 import urequests as requests
 import ujson as json
 
-from config import OPENWEATHERMAP_API_KEY, OPENLUNAR_API_KEY, WEATHER_URL, WEATHER_ID_URL, LUNAR_URL
+from src.config import OPENWEATHERMAP_API_KEY, OPENLUNAR_API_KEY, WEATHER_URL, WEATHER_ID_URL, LUNAR_URL
+from src.time_utils import lunar_day_internal, day_internal
+from src.birth import birthday, lunar_birthday
+
+
+def zodiac_id(zodiac):
+    zodiacs = ['\u9f20','\u725b','\u864e','\u5154','\u9f99','\u86c7','\u9a6c','\u7f8a','\u7334','\u9e21','\u72d7','\u732a']
+    return zodiacs.index(zodiac)
 
 
 def get_lunar(date, url=LUNAR_URL):
@@ -16,17 +23,36 @@ def get_lunar(date, url=LUNAR_URL):
             result = content['result']
             errorno = content['error_code']
             if errorno == 0:
+                birthday_coming = []
+                if len(lunar_birthday) != 0:
+                    for k, v in lunar_birthday.items():
+                        err = lunar_day_internal(v, result['data']['lunar'])
+                        if err is not None and err >= 0 and err <= 15:
+                            birthday_coming.append({
+                                k: (v, err)    
+                            })
+                if len(birthday) != 0:
+                    for k, v in birthday.items():
+                        err = day_internal(v, date)
+                        if err is not None and err >= 0 and err <= 15:
+                            birthday_coming.append({
+                                k: (v, err)    
+                            })
+                
                 lunar['weekday'] = result['data']['weekday']
                 lunar['lunar_year'] = result['data']['lunarYear']
+                lunar['zodiac_no'] = zodiac_id(result['data']['animalsYear'])
                 lunar['zodiac'] = result['data']['animalsYear']
                 lunar['lunar'] = result['data']['lunar']
                 lunar['suit'] = result['data']['suit']
                 lunar['avoid'] = result['data']['avoid']
+                lunar['birth_coming'] = birthday_coming
                 
                 return lunar
             else:
                 print('query error')
         except Exception as e:
+            print(e)
             print('parse error')
     else:
         print('query error')
@@ -58,18 +84,20 @@ def get_weather(wids, url=WEATHER_URL, city='曲江'):
     if r.content:
         try:
             content = json.loads(r.content)
-            print(content)
             result = content['result']
             errno = content['error_code']
             if errno == 0:
-                weather['city'] = city
+                weather['city'] = b'{}'.format(city)
                 future = []
                 for el in result['future']:
                     future.append({
                         'date': el['date'], 
                         'temperature': el['temperature'].strip('\u2103').split('/'), 
                         # 1: day, 0: night
-                        'weather': { 1: wids[el['wid']['day']], 0: wids[el['wid']['night']]},
+                        'weather': {
+                            1: wids[el['wid']['day']].encode('utf8'),
+                            0: wids[el['wid']['night']].encode('utf8')
+                        },
                     })
                 weather['future'] = future
                 return weather

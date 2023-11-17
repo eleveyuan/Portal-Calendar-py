@@ -70,4 +70,4 @@ def encode_utf8_to_unicode(utf8):
 
 
 def is_space_char(utf):
-    return cp == 0x9 or cp == 0x20 or cp == 0xA0
+    return utf == 0x9 or utf == 0x20 or utf == 0xA0

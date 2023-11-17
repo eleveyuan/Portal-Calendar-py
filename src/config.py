@@ -2,25 +2,24 @@
 # -*- coding: utf-8 -*-
 
 """
-wifi连接配置
+wifi info
 """
-WIFI_NAME = ""
-WIFI_PASS = ""
+WIFI_NAME = "Mi 10"
+WIFI_PASS = "12345688"
 HOSTNAME = ""
 
-"""
-展示日期
-"""
-SHOW_DAY = True
-SHOW_MONTH = True
-
 LANGUAGE = "zh-cn"  # en-us
-
-"""
-时区
-"""
 TIME_ZONE = "Asia/Shanghai"
 
+"""
+PINS
+"""
+DIN_PIN = 11  # COPI
+CLK_PIN = 12  # SCK
+CS_PIN = 10  # CS
+DC_PIN = 13  # Any OUTPUT pin
+RESET_PIN = 1  # Any OUTPUT pin
+BUSY_PIN = 3  # Any INPUT pin
 
 """
 api key
@@ -29,20 +28,9 @@ api key
 """
 WEATHER_URL = "http://apis.juhe.cn/simpleWeather/query"
 WEATHER_ID_URL = "http://apis.juhe.cn/simpleWeather/wids"
-OPENWEATHERMAP_API_KEY = ""
+OPENWEATHERMAP_API_KEY = "7943428cac2848c0367ba9b844652e45"
 LUNAR_URL = "http://v.juhe.cn/calendar/day"
-OPENLUNAR_API_KEY = ""
-
-"""
-1: 展示五天的天气预报
-2: 展示当天3小时内的天气情况
-"""
-WEATHER_DISPLAY_TYPE = 1
-
-SECONDARY_WEATHER_INFORMATION = 1
-WEATHER_UNITS = "imperial"
-WEATHER_LOCATION = ""
-WEATHER_START_HOUR = 9
+OPENLUNAR_API_KEY = "aaddf5512a37bde7c808f6d7ad07fd97"
 
 
 """
@@ -50,78 +38,59 @@ WEATHER_START_HOUR = 9
 """
 
 """
-NTP(网络时间协议Network Time Protocol)服务器
+NTP servers
     中国科学院国家授时中心: ntp.ntsc.ac.cn
     阿里云授时服务器: ntp.aliyun.com
     清华大学: ntp.tuna.tsinghua.edu.cn
 """
+TIME_ZONE = 8
 NTP_SERVERS = ["ntp.ntsc.ac.cn", "ntp.aliyun.com", "ntp.tuna.tsinghua.edu.cn", "time.google.com"]
 TIMEZONED_SERVERS = [""]
-
-
-"""
-NTP服务请求，超时时间
-"""
 NTP_TIMEOUT_SECONDS = 5
-
-"""
-时区查找，超时时间
-"""
 TZ_LOOKUP_TIMEOUT_SECONDS = 5
 
 """
-控制在午夜之前多久唤醒处理器以进行第一次和第二次 NTP 同步。
-
-每天执行两次 NTP 同步，因为 ESP32 中的内部时钟非常不准确。
-
-第一个时间应设置为您期望内部时钟在一天内关闭的最大可能时间，因为它将休眠一整天并在此时被唤醒。 
-第二个应该设置为第一次同步和午夜之间的时间漂移的最大可能量。
-
-如果时钟每天运行速度快+MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1，那么实际上它将在午夜前 
-MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1 * 2 分钟被唤醒，这是 NTP 测量被认为可接受的
-最长持续时间。 如果超过这个速度，每天都会发生多个第一阶段 NTP 同步，这会浪费电池。
-
-如果时钟每天运行速度慢 -MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1，那么它将在午夜准确唤醒并同步。 
-任何比这慢的速度，它都不会在午夜准时醒来，并且日期转换也会延迟。
-
-默认值对应于 ESP32 数据表中指定的最大不准确度，我建议您不要碰它们。(google翻译)
+ Controls how long before midnight the processor is woken up for the first and second NTP syncs.
+ 
+ Two NTP syncs per day are performed per day because the internal clock in the ESP32 is very inaccurate.
+ 
+ The first time should be set to the maximum possible amount you expect the internal clock to be off in one day, since it will sleep for an entire day
+ and be woken at this time. The second one should be set to the maximum possible amount it will drift in the time betwen the first sync and midnight.
+ 
+ If the clock is running +MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1 fast per day, then in reality it will be woken up MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1 * 2
+ minutes before midnight, which is the maximum duration the NTP measurement will be deemed acceptable for. Any faster than that, and multiple
+ first stage NTP syncs will happen per day, which wastes battery.
+ 
+ If the clock is running -MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1 slow per day, then it will wake up and sync exactly at midnight. Any slower than that,
+ and it won't wake wake up in time for midnight and the date changeover will be late.
+ 
+ The default values correspond to the maximum inaccuracy specified in the ESP32's datasheet, I recommend you don't touch them.
 """
 MINUTES_BEFORE_MIDNIGHT_TO_SYNC_1 = 72
 MINUTES_BEFORE_MIDNIGHT_TO_SYNC_2 = 8
 
 """
-在显示错误之前，我们会多少小时没有互联网。 最好不要超过1天，
-因为 ESP32 中的内部时钟通常每天会有两位数分钟的偏差。（google翻译。。还是自己改改）
+ How many hours we'll go without internet before showing an error. This really shouldn't be longer than a couple days, since the internal
+ clock in the ESP32 is usually off by double-digit minutes per day.
 """
 ERROR_AFTER_HOURS_WITHOUT_INTERNET = 24
 
 """
-测量系统时钟的漂移并应用校正因子以获得更准确的计时。
+ Measure drift in the system clock and apply a correction factor for more accurate timekeeping.
  
-由于 ESP32 的内部时钟会根据温度发生较大的漂移，因此假设时钟放置在温度相对稳定的环境中，
-这对于提高时钟精度非常有效。
+ Since the ESP32's internal clock drifts significantly based on temperature, this can be pretty effective at improving the clock's accuracy
+ assuming the clock is placed in a relatively temperature-stable environment. Like, you know, indoors.
 """
 MAX_RTC_CORRECTION_FACTOR = 0.025
 
 """
-端口使用
+PORTS
 """
 NTP_LOCAL_PORT_START = 4242
 TIMEZONED_LOCAL_PORT_START = 2342
 
 """
-引脚使用
-"""
-SPI_BUS = HSPI
-DIN_PIN = -1  # COPI
-CLK_PIN = -1  # SCK
-CS_PIN = 15  # CS
-DC_PIN = 23  # Any OUTPUT pin
-RESET_PIN = 33  # Any OUTPUT pin
-BUSY_PIN = 27  # Any INPUT pin
-
-"""
-时间相关，原项目global.h文件内容
+TIME
 """
 uS_PER_S = 1000000
 SECONDS_PER_HOUR = 3600

@@ -3,7 +3,7 @@
 from machine import Pin
 from time import sleep_ms
 
-from utf2uni import encode_get_utf8_size, encode_utf8_to_unicode, is_space_char
+from src.utf2uni import encode_get_utf8_size, encode_utf8_to_unicode, is_space_char
 
 
 BLACK = 0
@@ -18,6 +18,7 @@ ROTATION_90     = 1
 ROTATION_180    = 2
 ROTATION_270    = 3
 
+_ALIGN_NONE     = 0b000000
 _ALIGN_LEFT     = 0b000001
 _ALIGN_TOP      = 0b000010
 _ALIGN_RIGHT    = 0b000100
@@ -33,6 +34,7 @@ BOTTOM_CENTER   = _ALIGN_BOTTOM | _ALIGN_HCENTER
 BOTTOM_LEFT     = _ALIGN_BOTTOM | _ALIGN_LEFT
 LEFT_CENTER     = _ALIGN_LEFT | _ALIGN_VCENTER
 CENTER          = _ALIGN_HCENTER | _ALIGN_VCENTER
+NONE_ALIGN      = _ALIGN_NONE
 
 
 class DisplayEPD7in5:
@@ -48,10 +50,10 @@ class DisplayEPD7in5:
 
         self.init()
 
-    def get_height():
+    def get_height(self):
         return self.height
 
-    def get_width():
+    def get_width(self):
         return self.width
     
     def init(self):
@@ -243,6 +245,58 @@ class DisplayEPD7in5:
         for j in range(y, y + length):
             for i in range(x, x + thickness):
                 self.set_pixel(frame_buffer, i, j, color)
+    
+    def draw_circle(self, frame_buffer, x, y, radius, color, align):
+        x, y = self._align(x, y, 2 * radius, 2 * radius, align)
+         # Bresenham algorithm
+        x_pos = -radius
+        y_pos = 0
+        err = 2 - 2 * radius
+        if (x >= self.width or y >= self.height):
+            return
+        while True:
+            self.set_pixel(frame_buffer, x - x_pos, y + y_pos, color)
+            self.set_pixel(frame_buffer, x + x_pos, y + y_pos, color)
+            self.set_pixel(frame_buffer, x + x_pos, y - y_pos, color)
+            self.set_pixel(frame_buffer, x - x_pos, y - y_pos, color)
+            e2 = err
+            if (e2 <= y_pos):
+                y_pos += 1
+                err += y_pos * 2 + 1
+                if(-x_pos == y_pos and e2 <= x_pos):
+                    e2 = 0
+            if (e2 > x_pos):
+                x_pos += 1
+                err += x_pos * 2 + 1
+            if x_pos > 0:
+                break 
+
+    def draw_filled_circle(self, frame_buffer, x, y, radius, color, align):
+        x, y = self._align(x, y, 2 * radius, 2 * radius, align)
+        # Bresenham algorithm
+        x_pos = -radius
+        y_pos = 0
+        err = 2 - 2 * radius
+        if (x >= self.width or y >= self.height):
+            return
+        while True:
+            self.set_pixel(frame_buffer, x - x_pos, y + y_pos, color)
+            self.set_pixel(frame_buffer, x + x_pos, y + y_pos, color)
+            self.set_pixel(frame_buffer, x + x_pos, y - y_pos, color)
+            self.set_pixel(frame_buffer, x - x_pos, y - y_pos, color)
+            self.draw_hline(frame_buffer, x + x_pos, y + y_pos, 2 * (-x_pos) + 1, 1, color, NONE_ALIGN)
+            self.draw_hline(frame_buffer, x + x_pos, y - y_pos, 2 * (-x_pos) + 1, 1, color, NONE_ALIGN)
+            e2 = err
+            if (e2 <= y_pos):
+                y_pos += 1
+                err += y_pos * 2 + 1
+                if(-x_pos == y_pos and e2 <= x_pos):
+                    e2 = 0
+            if (e2 > x_pos):
+                x_pos  += 1
+                err += x_pos * 2 + 1
+            if x_pos > 0:
+                break
 
     def draw_image(self, frame_buffer, x, y, image, color, align):
         x, y = self._align(x, y, image['width'], image['height'], align) 
@@ -263,8 +317,8 @@ class DisplayEPD7in5:
         i, pos = 0, 0
         while i < len(line):
             utfbytes = encode_get_utf8_size(line[i])
-            print(hex(utfbytes))
             uni = encode_utf8_to_unicode(line[i:i + utfbytes])
+            print('unicode = ', uni)
             i += utfbytes
             pos += 1
             if is_space_char(utfbytes):
@@ -284,7 +338,6 @@ class DisplayEPD7in5:
             x, y = self._align(x, y, width, font['ascent'] + font['descent'], align)
         i, pos = 0, 0
         while i < len(line):
-            print('x=', x, ' y=', y)
             utfbytes = encode_get_utf8_size(line[i])
             uni = encode_utf8_to_unicode(line[i:i + utfbytes])
             i += utfbytes
@@ -299,10 +352,13 @@ class DisplayEPD7in5:
     
     def draw_multiline_text(self, frame_buffer, x, y, lines, font, color, align, tracking=0, leading=0):
         # https://fonts.google.com/knowledge/glossary/line_height_leading
-        leading += font.ascent + font.descent
+        leading += font['ascent'] + font['descent']
         if not align & _ALIGN_TOP:
             x, y = self._align(x, y, 0, leading * len(lines), align)
         align = align & ~_ALIGN_BOTTOM & ~_ALIGN_VCENTER | _ALIGN_TOP
-        for line in line:
+        for line in lines:
             self.draw_text(frame_buffer, x, y, line, font, color, align, tracking)
             y += leading
+
+
+

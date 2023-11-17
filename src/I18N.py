@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from config import LANGUAGE
+from src.config import LANGUAGE
 
 I18N_MONTHS, I18N_DAYS, I18N_DAYS_ABBREVIATIONS = [], [], []
 
