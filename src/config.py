@@ -10,6 +10,8 @@ HOSTNAME = ""
 
 LANGUAGE = "zh-cn"  # en-us
 TIME_ZONE = "Asia/Shanghai"
+CITY = ""
+DISTRICT = ""
 
 """
 PINS
@@ -28,9 +30,9 @@ api key
 """
 WEATHER_URL = "http://apis.juhe.cn/simpleWeather/query"
 WEATHER_ID_URL = "http://apis.juhe.cn/simpleWeather/wids"
-OPENWEATHERMAP_API_KEY = "7943428cac2848c0367ba9b844652e45"
+OPENWEATHERMAP_API_KEY = ""
 LUNAR_URL = "http://v.juhe.cn/calendar/day"
-OPENLUNAR_API_KEY = "aaddf5512a37bde7c808f6d7ad07fd97"
+OPENLUNAR_API_KEY = ""
 
 
 """
