@@ -2,7 +2,7 @@
 python build_font.py ./SmileySans-Oblique.ttf -name smiley32 -size 32 -ranges 年,月,日,星,期,周,正,腊,冬,寒,一,二,三,四,五,六,七,八,九,十,初,宜,忌,甲,乙,丙,丁,戊,己,庚,辛,壬,癸,子,丑,寅,卯,辰,巳,午,未,申,酉,戌,亥,鼠,牛,虎,兔,龙,蛇,马,羊,猴,鸡,狗,猪,(,),（,）,0,1,2,3,4,5,6,7,8,9,/ -fg=255 -bg=0
 python build_font.py ./SmileySans-Oblique.ttf -name smiley256 -size 256 -ranges 0,1,2,3,4,5,6,7,8,9 -fg=255 -bg=0
 python build_font.py ./SmileySans-Oblique.ttf -name smiley24 -size 24 -ranges *  -fg=255 -bg=0
-python build_font.py ./SmileySans-Oblique.ttf -name smiley16 -size 16 -ranges 年,月,日,星,期,周,一,二,三,四,五,六,七,八,九,十,宜,忌,1,2,3,4,5,6,7,8,9,0,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9 -fg=255 -bg=0
+python build_font.py ./LXGWWenKai-Light.ttf -name smiley16 -size 16 -ranges city  -fg=255 -bg=0
 
 # ****************************** cropping zodiac image ******************************
 python cut_zodiac.py ./
