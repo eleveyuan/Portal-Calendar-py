@@ -2,25 +2,26 @@
 python build_font.py ./SmileySans-Oblique.ttf -name smiley32 -size 32 -ranges 年,月,日,星,期,周,正,腊,冬,寒,一,二,三,四,五,六,七,八,九,十,初,宜,忌,甲,乙,丙,丁,戊,己,庚,辛,壬,癸,子,丑,寅,卯,辰,巳,午,未,申,酉,戌,亥,鼠,牛,虎,兔,龙,蛇,马,羊,猴,鸡,狗,猪,(,),（,）,0,1,2,3,4,5,6,7,8,9,/ -fg=255 -bg=0
 python build_font.py ./SmileySans-Oblique.ttf -name smiley256 -size 256 -ranges 0,1,2,3,4,5,6,7,8,9 -fg=255 -bg=0
 python build_font.py ./SmileySans-Oblique.ttf -name smiley24 -size 24 -ranges *  -fg=255 -bg=0
-python build_font.py ./SmileySans-Oblique.ttf -name smiley16 -size 16 -ranges 年,月,日,星,期,周,一,二,三,四,五,六,七,八,九,十,宜,忌,1,2,3,4,5,6,7,8,9,0,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z -fg=255 -bg=0
+python build_font.py ./SmileySans-Oblique.ttf -name smiley16 -size 16 -ranges 年,月,日,星,期,周,一,二,三,四,五,六,七,八,九,十,宜,忌,1,2,3,4,5,6,7,8,9,0,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9 -fg=255 -bg=0
 
 # ****************************** cropping zodiac image ******************************
 python cut_zodiac.py ./
 
 # ****************************** split image ******************************
+# remap all the colours to palette without dithering
 magick xc:red xc:white xc:black +append palette.gif
-magick rat.png -remap palette.gif res_rat.png
-magick ow.png -remap palette.gif res_ow.png
-magick tiger.png -remap palette.gif res_tiger.png
-magick rabbit.png -remap palette.gif res_rabbit.png
-magick dragon.png -remap palette.gif res_dragon.png
-magick snake.png -remap palette.gif res_snake.png
-magick horse.png -remap palette.gif res_horse.png
-magick goat.png -remap palette.gif res_goat.png
-magick monkey.png -remap palette.gif res_monkey.png
-magick rooster.png -remap palette.gif res_rooster.png
-magick dog.png -remap palette.gif res_dog.png
-magick pig.png -remap palette.gif res_pig.png
+magick rat.png +dither -remap palette.gif res_rat.png
+magick ow.png +dither -remap palette.gif res_ow.png
+magick tiger.png +dither -remap palette.gif res_tiger.png
+magick rabbit.png +dither -remap palette.gif res_rabbit.png
+magick dragon.png +dither -remap palette.gif res_dragon.png
+magick snake.png +dither -remap palette.gif res_snake.png
+magick horse.png +dither -remap palette.gif res_horse.png
+magick goat.png +dither -remap palette.gif res_goat.png
+magick monkey.png +dither -remap palette.gif res_monkey.png
+magick rooster.png +dither -remap palette.gif res_rooster.png
+magick dog.png +dither -remap palette.gif res_dog.png
+magick pig.png +dither -remap palette.gif res_pig.png
 
 python split_image.py res_rat.png -dir ./
 python split_image.py res_ow.png -dir ./

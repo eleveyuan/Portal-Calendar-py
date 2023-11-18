@@ -18,7 +18,7 @@ current_path = os.getcwd()
 img = cv2.imread(path_)
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
-colors = np.where(hist > 5000)
+colors = np.where(hist > 500)
 img_number = 0
 platte = ['black', 'red']
 
@@ -28,3 +28,5 @@ for color in colors[0]:
     split_image[np.where(gray != color)] = 255
     cv2.imwrite(result_name + '_' + platte[img_number]+".bmp", split_image)
     img_number += 1
+    if img_number > 1:
+        break
