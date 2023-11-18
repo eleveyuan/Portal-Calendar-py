@@ -5,6 +5,7 @@ from time import sleep_ms
 
 from src.utf2uni import encode_get_utf8_size, encode_utf8_to_unicode, is_space_char
 
+NO_ALPHA = 0b111
 
 BLACK = 0
 WHITE = 1
@@ -47,6 +48,7 @@ class DisplayEPD7in5:
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
         self.rotation = ROTATION_0
+        self._alpha = NO_ALPHA
 
         self.init()
 
@@ -156,7 +158,10 @@ class DisplayEPD7in5:
         self.rst.value(0)
         sleep_ms(5)
         self.rst.value(1)
-        sleep_ms(20) 
+        sleep_ms(20)
+        
+    def set_alpha(self, alpha):
+        self._alpha = alpha
     
     def set_rotation(self, rotation):
         self.rotation = rotation
@@ -304,10 +309,12 @@ class DisplayEPD7in5:
             for i in range(0, image['width']):
                 if color == BLACK:
                     c = image['data'][(i + j *image['width']) // 8] & (0x80 >> (i % 8))
-                    self.set_pixel(frame_buffer, x+i, y+j, c)
+                    if c != self._alpha:
+                        self.set_pixel(frame_buffer, x+i, y+j, c)
                 elif color == RED:
                     c = (~image['data'][(i + j *image['width']) // 8]) & (0x80 >> (i % 8))
-                    self.set_pixel(frame_buffer, x+i, y+j, c)
+                    if c != self._alpha:
+                        self.set_pixel(frame_buffer, x+i, y+j, c)
     
     def measure_text(self, line, font, tracking=0):
         if len(line) == 0:

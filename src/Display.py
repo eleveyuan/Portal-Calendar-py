@@ -5,7 +5,7 @@ from machine import SPI, Pin
 
 from src import DisplayEPD7in5
 
-from src.config import DIN_PIN, CLK_PIN, CS_PIN, DC_PIN, RESET_PIN, BUSY_PIN
+from src.config import DIN_PIN, CLK_PIN, CS_PIN, DC_PIN, RESET_PIN, BUSY_PIN, CITY, DISTRICT
 from src.time_utils import get_days_in_month, is_day_light
 from src.I18N import I18N_MONTHS, I18N_DAYS, I18N_DAYS_ABBREVIATIONS
 from src.apis import get_weather_id, get_weather, get_lunar, parse_weather_condition_id
@@ -31,6 +31,7 @@ from resources.weather_snow import IMG_WEATHER_SNOW
 from resources.weather_info_degree_symbol import IMG_WEATHER_INFO_DEGREE_SYMBOL
 from resources.weather_info_percent_symbol import IMG_WEATHER_INFO_PERCENT_SYMBOL
 from resources.error import IMG_ERROR
+from resources.local_icon import IMG_LOCAL_ICON
 
 
 H_CENTER = 225
@@ -39,7 +40,8 @@ ICON_SPACING = 9
 LEFT =  82
 RIGHT = LEFT + ICON_SIZE * 5 + ICON_SPACING * 4
 WIDTH = RIGHT - LEFT
-ICON_TOP = 550
+ICON_TOP = 338
+LUNAR_TOP = 500
 
 
 class Display:
@@ -47,12 +49,14 @@ class Display:
         fb_size = int(DisplayEPD7in5.EPD_WIDTH * DisplayEPD7in5.EPD_HEIGHT / 8)
         self.frame_black = bytearray(fb_size)
         self.frame_red = bytearray(fb_size)
+        self.lunar_height = 0
     
     def init(self):
         # self._display = DisplayEPD7in5.DisplayEPD7in5(spi, cs=10, dc=13, rst=1, busy=3)
         spi = SPI(1, 115200, sck=Pin(CLK_PIN), mosi=Pin(DIN_PIN))
         self._display = DisplayEPD7in5.DisplayEPD7in5(spi, cs=CS_PIN, dc=DC_PIN, rst=RESET_PIN, busy=BUSY_PIN)
         self._display.set_rotation(DisplayEPD7in5.ROTATION_270)
+        self._display.clear_frame(self.frame_black, self.frame_red)
 
     def error(self, msg, will_retry):
         # show error message
@@ -75,23 +79,16 @@ class Display:
         year, month, day, hour, minute, second, weekday, yearday = time.localtime()
         days_in_month = get_days_in_month(month, year)
 
-        # static lines
-        self._display.draw_hline(self.frame_black, LEFT, 50, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_hline(self.frame_black, LEFT, 430, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_hline(self.frame_black, LEFT, 538, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-
         # family logo
 
         # show BIG Date
         line = b'{}'.format(day)
+        big_date_width = self._display.measure_text(line, FONT_SMILEY256)
+        print(big_date_width)
         self._display.draw_text(self.frame_black, LEFT, 16, line, FONT_SMILEY256, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT, 10)
 
-        # show small date
-        # line = b'{}/{}'.format(month, day)
-        # self._display.draw_text(self.frame_black, line, LEFT, 394, FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-
         # show day name
-        self._display.draw_text(self.frame_black, RIGHT, 394, I18N_DAYS[weekday], FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_RIGHT)
+        self._display.draw_text(self.frame_black, RIGHT, 290, I18N_DAYS[weekday], FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_RIGHT)
         # show month name
         self._display.draw_text(self.frame_black, LEFT, 14, I18N_MONTHS[month-1], FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         # show year
@@ -100,9 +97,10 @@ class Display:
         # show lunar info
         # show birthday info
         lunar_res = get_lunar(date_fmt)
-        self.draw_birthday_info(lunar_res.pop('birth_coming'))
-        self.draw_zodiac_pic(lunar_res.pop('zodiac_no'))
+        birth_info = lunar_res.pop('birth_coming')
+        self.draw_zodiac_pic(lunar_res.pop('zodiac_no'), big_date_width)
         self.draw_lunar_info(lunar_res)
+        self.draw_birthday_info(birth_info)
         
         # show weather
         wids = get_weather_id()
@@ -111,14 +109,24 @@ class Display:
         for weather in weathers['future']:
             self.draw_daily_weather(weather, i)
             i += 1
-            
+        
+        # show locations
+        self._display.draw_image(self.frame_black, LEFT, 750, IMG_LOCAL_ICON, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        line = b"{}，{}".format(CITY, DISTRICT)
+        self._display.draw_text(self.frame_black, LEFT + 40, 760, line, FONT_SMILEY16, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        
+        # static lines
+        self._display.draw_hline(self.frame_black, LEFT, 50, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_hline(self.frame_black, LEFT, 326, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_hline(self.frame_black, LEFT, 488, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        
         self._display.display(self.frame_black, self.frame_red)
         self._display.sleep()
     
-    def draw_zodiac_pic(self, no):
+    def draw_zodiac_pic(self, no, width):
         black_image, red_image = self.get_zodiac_pic(no)
-        self._display.draw_image(self.frame_black, 240, 100, black_image, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
-        self._display.draw_image(self.frame_black, 240, 100, red_image, DisplayEPD7in5.RED, DisplayEPD7in5.NONE_ALIGN)
+        self._display.draw_image(self.frame_black, LEFT + width + 32, 16+50, black_image, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_image(self.frame_red, LEFT + width + 32, 16+50, red_image, DisplayEPD7in5.RED, DisplayEPD7in5.TOP_LEFT)
     
     def get_zodiac_pic(self, no):
         if no == 0:
@@ -193,47 +201,62 @@ class Display:
             return None
 
     def draw_weather_info_text(self, text, symbol, x, y):
-        text_width = self._display.measure_text(text, FONT_SMILEY24)
+        text_width = self._display.measure_text(text, FONT_SMILEY16)
         x -= (text_width + symbol['width'] // 2) // 2
-        self._display.draw_text(self.frame_black, x, y, text, FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_image(self.frame_black, x + text_width, y, symbol, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.set_alpha(DisplayEPD7in5.WHITE)
+        self._display.draw_text(self.frame_black, x, y, text, FONT_SMILEY16, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
+        self._display.draw_image(self.frame_black, x + text_width, y-2, symbol, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
+        self._display.set_alpha(DisplayEPD7in5.NO_ALPHA)
 
     def draw_daily_weather(self, weather, x):
+        bias = x
         x = LEFT + x * (ICON_SIZE + ICON_SPACING)
-
+        
         # draw frame
-        self._display.draw_image(self.frame_black, x, ICON_TOP, IMG_WEATHER_FRAME, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_image(self.frame_black, x, ICON_TOP, IMG_WEATHER_FRAME, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
+        
+        # draw high temp
+        self.draw_weather_info_text(b'{}'.format(weather['temperature'][1]), IMG_WEATHER_INFO_DEGREE_SYMBOL, x + 32, ICON_TOP + 90)
+        # draw low temp
+        self.draw_weather_info_text(b'{}'.format(weather['temperature'][0]), IMG_WEATHER_INFO_DEGREE_SYMBOL, x + 32, ICON_TOP + 111)
 
         # draw condition icon
         is_day = is_day_light(time.localtime()[3])
         condition = parse_weather_condition_id(weather['weather'][is_day])
         icon = self.get_weather_condition_icon(condition, is_day)
         if icon:
-            self._display.draw_image(self.frame_black, x + 2, ICON_TOP + 21, icon, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+            self._display.set_alpha(DisplayEPD7in5.WHITE)
+            self._display.draw_image(self.frame_black, x + 2, ICON_TOP + 21, icon, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
+            self._display.set_alpha(DisplayEPD7in5.NO_ALPHA)
         
         # draw day
-        self._display.draw_text(self.frame_black, x + 5, ICON_TOP, I18N_DAYS_ABBREVIATIONS[(time.localtime()[6]+x)%7], FONT_SMILEY16, DisplayEPD7in5.WHITE, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_black, x + 64 -5, ICON_TOP, b'{}'.format(weather['date'].split('-')[-1]), FONT_SMILEY16, DisplayEPD7in5.WHITE, DisplayEPD7in5.TOP_LEFT)
-
-        # draw high temp
-        self.draw_weather_info_text(b'{}'.format(weather['temperature'][1]), IMG_WEATHER_INFO_DEGREE_SYMBOL, x + 32, ICON_TOP + 83)
-
-        # draw low temp
-        self.draw_weather_info_text(b'{}'.format(weather['temperature'][0]), IMG_WEATHER_INFO_DEGREE_SYMBOL, x + 32, ICON_TOP + 108)
+        self._display.set_alpha(DisplayEPD7in5.BLACK)
+        self._display.draw_text(self.frame_black, x + 5, ICON_TOP + 2, I18N_DAYS_ABBREVIATIONS[(time.localtime()[6]+bias)%7], FONT_SMILEY16, DisplayEPD7in5.WHITE, DisplayEPD7in5.NONE_ALIGN)
+        self._display.draw_text(self.frame_black, x + 42, ICON_TOP + 2, b'{}'.format(weather['date'].split('-')[-1]), FONT_SMILEY16, DisplayEPD7in5.WHITE, DisplayEPD7in5.NONE_ALIGN)
+        self._display.set_alpha(DisplayEPD7in5.NO_ALPHA)
 
     def draw_lunar_info(self, lunar_info):
         line = b'{}{}'.format(lunar_info['lunar_year'], lunar_info['lunar'])
-        self._display.draw_text(self.frame_black, LEFT, 394, line, FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_filled_circle(self.frame_black, LEFT, 480, 16, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_black, LEFT, 465, b'忌', FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_black, LEFT, 420, lunar_info['suit'].encode('utf8'), FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_black, LEFT, 465, lunar_info['avoid'].encode('utf8'), FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_black, LEFT, 290, line, FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        if len(lunar_info['suit']) == 1:
+            self._display.draw_text(self.frame_black, LEFT+36, LUNAR_TOP, lunar_info['suit'][0], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        else:
+            self._display.draw_multiline_text(self.frame_black, LEFT+36, LUNAR_TOP, lunar_info['suit'], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        track = len(lunar_info['suit']) * 30 + 3
+        self._display.draw_filled_circle(self.frame_black, LEFT+10, LUNAR_TOP+track+15, 18, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_black, LEFT, LUNAR_TOP+track, b'忌', FONT_SMILEY24, DisplayEPD7in5.WHITE, DisplayEPD7in5.TOP_LEFT)
+        if len(lunar_info['avoid']) == 1:
+            self._display.draw_text(self.frame_black, LEFT+36, LUNAR_TOP+track, lunar_info['avoid'][0], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        else:
+            self._display.draw_multiline_text(self.frame_black, LEFT+36, LUNAR_TOP+track, lunar_info['avoid'], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self.lunar_height = track + len(lunar_info['avoid']) * 30
         
-        self._display.draw_filled_circle(self.frame_red, LEFT, 420, 18, DisplayEPD7in5.RED, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_red, LEFT, 405, b'宜', FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_filled_circle(self.frame_red, LEFT+10, LUNAR_TOP+15, 18, DisplayEPD7in5.RED, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_red, LEFT, LUNAR_TOP, b'宜', FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
 
     def draw_birthday_info(self, birth_list):
-        i, x, y = 0, 10, 400
+        i, x = 0, LEFT
+        y = LUNAR_TOP + self.lunar_height if self.lunar_height else LUNAR_TOP + 180
         if len(birth_list) > 0:
             for birth in birth_list:
                 name = list(birth.items())[0][0]
