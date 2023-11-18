@@ -309,11 +309,11 @@ class DisplayEPD7in5:
             for i in range(0, image['width']):
                 if color == BLACK:
                     c = image['data'][(i + j *image['width']) // 8] & (0x80 >> (i % 8))
-                    if c != self._alpha:
+                    if c != self._alpha and i < image['width'] - image['pad']:
                         self.set_pixel(frame_buffer, x+i, y+j, c)
                 elif color == RED:
                     c = (~image['data'][(i + j *image['width']) // 8]) & (0x80 >> (i % 8))
-                    if c != self._alpha:
+                    if c != self._alpha and i < image['width'] - image['pad']:
                         self.set_pixel(frame_buffer, x+i, y+j, c)
     
     def measure_text(self, line, font, tracking=0):
@@ -325,14 +325,12 @@ class DisplayEPD7in5:
         while i < len(line):
             utfbytes = encode_get_utf8_size(line[i])
             uni = encode_utf8_to_unicode(line[i:i + utfbytes])
-            print('unicode = ', uni)
             i += utfbytes
             pos += 1
             if is_space_char(utfbytes):
                 length += font['space_width']
             else:
                 length += font['glyphs'][uni]['right']
-        print('pos=', pos, ' length=', length)
         return length + tracking * (pos - 1)
     
     def draw_text(self, frame_buffer, x, y, line, font, color, align, tracking=0):
