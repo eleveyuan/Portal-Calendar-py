@@ -93,13 +93,17 @@ class Glyph:
         self.char = char
         self.code_point = code_point
         self.index = index
-        self.left, self.top, right, bottom = font.getbbox(char)
+        self.left, self.top, self.right, bottom = font.getbbox(char)
         self.width = font_size
         self.height = font_size
         self.data = None
+        self.pad = 0
 
     def set_data(self, lines):
         self.data = '[\n\t\t\t\t{}\n\t\t\t]'.format('\n\t\t\t\t'.join(lines))
+
+    def set_pad(self, pad):
+        self.pad = pad
 
     def empty(self):
         return self.width * self.height == 0
@@ -108,7 +112,7 @@ class Glyph:
         return self.width, self.height
 
     def compile(self):
-        return '0x{0.code_point:04X}: {{ \n\t\t\t"char": "{0.char}", "width": {0.width}, "height": {0.height}, "top": {0.top}, "left": {0.left}, \n\t\t\t"data": {0.data}, \n\t\t}},  # {0.char} '.format(self)
+        return '0x{0.code_point:04X}: {{ \n\t\t\t"char": "{0.char}", "width": {0.width}, "height": {0.height}, "top": {0.top}, "left": {0.left}, "right": {0.right}, "pad": {0.pad}, \n\t\t\t"data": {0.data}, \n\t\t}},  # {0.char} '.format(self)
 
 
 parser = argparse.ArgumentParser()
@@ -122,6 +126,10 @@ args = parser.parse_args()
 
 if args.ranges == '*':
     with open('zh-hans3500.txt', 'r', encoding='utf8') as fr:
+        lines = ''.join([l.strip() for l in fr.readlines()])
+        code_point_ranges = list(map(lambda r: r.split(' ', 1), list(lines)))
+elif args.ranges == 'city':
+    with open('zh-city.txt', 'r', encoding='utf8') as fr:
         lines = ''.join([l.strip() for l in fr.readlines()])
         code_point_ranges = list(map(lambda r: r.split(' ', 1), list(lines)))
 else:
@@ -174,6 +182,7 @@ for code_point in code_point_ranges:
         # image.show() # for checking th char
         char_output_lines, char_byte_count, width, height, pad = compile_image(image)
         glyph.set_data(char_output_lines)
+        glyph.set_pad(pad)
         output_lines.append("// '{}'".format(uni))
         output_lines += char_output_lines
         byte_count += char_byte_count
@@ -201,9 +210,4 @@ with open(output_file_name, mode="w", encoding="utf8") as of:
     ])
 
 print("Done")
-
-
-
-
-
 
