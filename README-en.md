@@ -50,12 +50,12 @@ So I changed VCC pin to connect to 5v and PWR pin to 3.3v.
 | ----- | --- | ---- |
 | VCC (Grey) | <--> | 5v |
 | GND (Brown) | <--> | GND |
-| DIN (Blue) | <--> | IO13 |
-| CLK (Yellow) | <--> | IO14 |
-| CS (Orange) | <--> | IO15 |
-| DC (Green) | <--> | IO23 |
-| RST (White) | <--> | IO33 |
-| BUSY (Purple)	 | <--> | IO27 |
+| DIN (Blue) | <--> | IO11 |
+| CLK (Yellow) | <--> | IO12 |
+| CS (Orange) | <--> | IO10 |
+| DC (Green) | <--> | IO13 |
+| RST (White) | <--> | IO1 |
+| BUSY (Purple)	 | <--> | IO3 |
 | PWR (RED) | <--> | 3.3v |
 
 ### Micropython
@@ -84,7 +84,7 @@ We get data by querying [Juhe Api](juhe.cn)
 ![](img/api.jpg)
 
 ### font
-[Smiley-sans/得意黑](https://github.com/atelier-anchor/smiley-sans) is a open source fonts we use in this project
+[Smiley-sans/得意黑](https://github.com/atelier-anchor/smiley-sans) and [LXGW WenKai / 霞鹜文楷](https://github.com/lxgw/LxgwWenKai) are open source fonts we use in this project
 
 
 

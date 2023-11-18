@@ -64,12 +64,12 @@ CN | [EN](./README-en.md)
 | ----- | --- | ---- |
 | VCC (Grey) | <--> | 5v |
 | GND (Brown) | <--> | GND |
-| DIN (Blue) | <--> | IO13 |
-| CLK (Yellow) | <--> | IO14 |
-| CS (Orange) | <--> | IO15 |
-| DC (Green) | <--> | IO23 |
-| RST (White) | <--> | IO33 |
-| BUSY (Purple)	 | <--> | IO27 |
+| DIN (Blue) | <--> | IO11 |
+| CLK (Yellow) | <--> | IO12 |
+| CS (Orange) | <--> | IO10 |
+| DC (Green) | <--> | IO13 |
+| RST (White) | <--> | IO1 |
+| BUSY (Purple)	 | <--> | IO3 |
 | PWR (RED) | <--> | 3.3v |
 
 ### MicroPython
@@ -121,5 +121,6 @@ CN | [EN](./README-en.md)
 
 
 ### 字体
-[得意黑](https://github.com/atelier-anchor/smiley-sans)
-
+项目使用的字体：
+1. [得意黑](https://github.com/atelier-anchor/smiley-sans)：项目主要使用得意黑，但是覆盖的字不够
+2. [LXGW WenKai / 霞鹜文楷](https://github.com/lxgw/LxgwWenKai)
