@@ -4,8 +4,8 @@
 """
 wifi info
 """
-WIFI_NAME = "Mi 10"
-WIFI_PASS = "12345688"
+WIFI_NAME = ""
+WIFI_PASS = ""
 HOSTNAME = ""
 
 LANGUAGE = "zh-cn"  # en-us

@@ -111,9 +111,9 @@ class Display:
             i += 1
         
         # show locations
-        self._display.draw_image(self.frame_black, LEFT, 750, IMG_LOCAL_ICON, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        line = b"{}，{}".format(CITY, DISTRICT)
-        self._display.draw_text(self.frame_black, LEFT + 40, 760, line, FONT_SMILEY16, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_image(self.frame_black, 2, 620, IMG_LOCAL_ICON, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        line = [w.encode('utf8') for w in list("{}-{}".format(CITY, DISTRICT))]
+        self._display.draw_multiline_text(self.frame_black, 10, 660, line, FONT_SMILEY16, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         
         # static lines
         self._display.draw_hline(self.frame_black, LEFT, 50, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
@@ -256,7 +256,7 @@ class Display:
 
     def draw_birthday_info(self, birth_list):
         i, x = 0, LEFT
-        y = LUNAR_TOP + self.lunar_height if self.lunar_height else LUNAR_TOP + 180
+        y = LUNAR_TOP + self.lunar_height + 16 if self.lunar_height else LUNAR_TOP + 180
         if len(birth_list) > 0:
             for birth in birth_list:
                 name = list(birth.items())[0][0]
