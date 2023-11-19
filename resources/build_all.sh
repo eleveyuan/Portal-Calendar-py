@@ -81,3 +81,4 @@ python build_image.py weather_showers.gif -dir ./
 python build_image.py weather_snow.gif -dir ./
 python build_image.py weather_thunderstorms.gif -dir ./
 python build_image.py error.png -dir ./
+python build_image.py local_icon.jpg -dir ./
