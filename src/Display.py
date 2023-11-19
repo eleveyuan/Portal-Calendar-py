@@ -10,10 +10,11 @@ from src.time_utils import get_days_in_month, is_day_light
 from src.I18N import I18N_MONTHS, I18N_DAYS, I18N_DAYS_ABBREVIATIONS
 from src.apis import get_weather_id, get_weather, get_lunar, parse_weather_condition_id
 
-from resources.smiley16 import FONT_SMILEY16
-from resources.smiley24 import FONT_SMILEY24
-from resources.smiley32 import FONT_SMILEY32
-from resources.smiley256 import FONT_SMILEY256
+from resources.small16 import FONT_SMALL16
+from resources.lunar24 import FONT_LUNAR24
+from resources.birth24 import FONT_BIRTH24
+from resources.middle32 import FONT_MIDDLE32
+from resources.big256 import FONT_BIG256
 
 from resources.weather_frame import IMG_WEATHER_FRAME
 from resources.weather_frame_empty import IMG_WEATHER_FRAME_EMPTY
@@ -63,13 +64,13 @@ class Display:
         self.init()
         y = self._display.get_height() - self._display.get_height() / 1.618
         self._display.draw_image(self.frame_black, H_CENTER, y, IMG_ERROR, black, DisplayEPD7in5.BOTTOM_CENTER)
-        self._display.draw_multiline_text(self.frame_black, H_CENTER, y + FONT_SMILEY24.ascent + FONT_SMILEY24.descent, msg, FONT_SMILEY24, black, DisplayGDEW075T7.TOP_CENTER)
+        self._display.draw_multiline_text(self.frame_black, H_CENTER, y + FONT_LUNAR24.ascent + FONT_LUNAR24.descent, msg, FONT_LUNAR24, black, DisplayGDEW075T7.TOP_CENTER)
 
         if will_retry:
             self._display.draw_multiline_text(self.frame_black, H_CENTER, self._display.get_height() - 12, [
             "Will try again in 1 hour. Or, press the RESET button",
             "on the back of the device to retry now."
-            ], FONT_SMILEY24, black, DisplayGDEW075T7.BOTTOM_CENTER)
+            ], FONT_LUNAR24, black, DisplayGDEW075T7.BOTTOM_CENTER)
         
         self._display.display(self.frame_black)
 
@@ -83,16 +84,16 @@ class Display:
 
         # show BIG Date
         line = b'{}'.format(day)
-        big_date_width = self._display.measure_text(line, FONT_SMILEY256)
+        big_date_width = self._display.measure_text(line, FONT_BIG256)
         print(big_date_width)
-        self._display.draw_text(self.frame_black, LEFT, 16, line, FONT_SMILEY256, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT, 10)
+        self._display.draw_text(self.frame_black, LEFT, 16, line, FONT_BIG256, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT, 10)
 
         # show day name
-        self._display.draw_text(self.frame_black, RIGHT, 290, I18N_DAYS[weekday], FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_RIGHT)
+        self._display.draw_text(self.frame_black, RIGHT, 290, I18N_DAYS[weekday], FONT_MIDDLE32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_RIGHT)
         # show month name
-        self._display.draw_text(self.frame_black, LEFT, 14, I18N_MONTHS[month-1], FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_black, LEFT, 14, I18N_MONTHS[month-1], FONT_MIDDLE32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         # show year
-        self._display.draw_text(self.frame_black, RIGHT, 14, b'{}'.format(year), FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_RIGHT)
+        self._display.draw_text(self.frame_black, RIGHT, 14, b'{}'.format(year), FONT_MIDDLE32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_RIGHT)
         
         # show lunar info
         # show birthday info
@@ -113,7 +114,7 @@ class Display:
         # show locations
         self._display.draw_image(self.frame_black, 2, 620, IMG_LOCAL_ICON, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         line = [w.encode('utf8') for w in list("{}-{}".format(CITY, DISTRICT))]
-        self._display.draw_multiline_text(self.frame_black, 10, 660, line, FONT_SMILEY16, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_multiline_text(self.frame_black, 10, 660, line, FONT_SMALL16, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         
         # static lines
         self._display.draw_hline(self.frame_black, LEFT, 50, WIDTH, 2, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
@@ -201,10 +202,10 @@ class Display:
             return None
 
     def draw_weather_info_text(self, text, symbol, x, y):
-        text_width = self._display.measure_text(text, FONT_SMILEY16)
+        text_width = self._display.measure_text(text, FONT_SMALL16)
         x -= (text_width + symbol['width'] // 2) // 2
         self._display.set_alpha(DisplayEPD7in5.WHITE)
-        self._display.draw_text(self.frame_black, x, y, text, FONT_SMILEY16, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
+        self._display.draw_text(self.frame_black, x, y, text, FONT_SMALL16, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
         self._display.draw_image(self.frame_black, x + text_width, y-2, symbol, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
         self._display.set_alpha(DisplayEPD7in5.NO_ALPHA)
 
@@ -231,28 +232,28 @@ class Display:
         
         # draw day
         self._display.set_alpha(DisplayEPD7in5.BLACK)
-        self._display.draw_text(self.frame_black, x + 5, ICON_TOP + 2, I18N_DAYS_ABBREVIATIONS[(time.localtime()[6]+bias)%7], FONT_SMILEY16, DisplayEPD7in5.WHITE, DisplayEPD7in5.NONE_ALIGN)
-        self._display.draw_text(self.frame_black, x + 42, ICON_TOP + 2, b'{}'.format(weather['date'].split('-')[-1]), FONT_SMILEY16, DisplayEPD7in5.WHITE, DisplayEPD7in5.NONE_ALIGN)
+        self._display.draw_text(self.frame_black, x + 5, ICON_TOP + 2, I18N_DAYS_ABBREVIATIONS[(time.localtime()[6]+bias)%7], FONT_SMALL16, DisplayEPD7in5.WHITE, DisplayEPD7in5.NONE_ALIGN)
+        self._display.draw_text(self.frame_black, x + 42, ICON_TOP + 2, b'{}'.format(weather['date'].split('-')[-1]), FONT_SMALL16, DisplayEPD7in5.WHITE, DisplayEPD7in5.NONE_ALIGN)
         self._display.set_alpha(DisplayEPD7in5.NO_ALPHA)
 
     def draw_lunar_info(self, lunar_info):
         line = b'{}{}'.format(lunar_info['lunar_year'], lunar_info['lunar'])
-        self._display.draw_text(self.frame_black, LEFT, 290, line, FONT_SMILEY32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_black, LEFT, 290, line, FONT_MIDDLE32, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         if len(lunar_info['suit']) == 1:
-            self._display.draw_text(self.frame_black, LEFT+36, LUNAR_TOP, lunar_info['suit'][0], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+            self._display.draw_text(self.frame_black, LEFT+36, LUNAR_TOP, lunar_info['suit'][0], FONT_LUNAR24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         else:
-            self._display.draw_multiline_text(self.frame_black, LEFT+36, LUNAR_TOP, lunar_info['suit'], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        track = len(lunar_info['suit']) * 30 + 3
+            self._display.draw_multiline_text(self.frame_black, LEFT+36, LUNAR_TOP, lunar_info['suit'], FONT_LUNAR24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        track = len(lunar_info['suit']) * 30 + 8
         self._display.draw_filled_circle(self.frame_black, LEFT+10, LUNAR_TOP+track+15, 18, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_black, LEFT, LUNAR_TOP+track, b'忌', FONT_SMILEY24, DisplayEPD7in5.WHITE, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_black, LEFT, LUNAR_TOP+track, b'忌', FONT_LUNAR24, DisplayEPD7in5.WHITE, DisplayEPD7in5.TOP_LEFT)
         if len(lunar_info['avoid']) == 1:
-            self._display.draw_text(self.frame_black, LEFT+36, LUNAR_TOP+track, lunar_info['avoid'][0], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+            self._display.draw_text(self.frame_black, LEFT+36, LUNAR_TOP+track, lunar_info['avoid'][0], FONT_LUNAR24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         else:
-            self._display.draw_multiline_text(self.frame_black, LEFT+36, LUNAR_TOP+track, lunar_info['avoid'], FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+            self._display.draw_multiline_text(self.frame_black, LEFT+36, LUNAR_TOP+track, lunar_info['avoid'], FONT_LUNAR24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
         self.lunar_height = track + len(lunar_info['avoid']) * 30
         
         self._display.draw_filled_circle(self.frame_red, LEFT+10, LUNAR_TOP+15, 18, DisplayEPD7in5.RED, DisplayEPD7in5.TOP_LEFT)
-        self._display.draw_text(self.frame_red, LEFT, LUNAR_TOP, b'宜', FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
+        self._display.draw_text(self.frame_red, LEFT, LUNAR_TOP, b'宜', FONT_LUNAR24, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT)
 
     def draw_birthday_info(self, birth_list):
         i, x = 0, LEFT
@@ -263,5 +264,5 @@ class Display:
                 dt, err = list(birth.items())[0][1]
                 print('{}还有{}天生日：{}'.format(name, err, dt))
                 line = b'{}还有{}天生日：{}'.format(name, err, dt)
-                self._display.draw_text(self.frame_black, x, y + i*24, line, FONT_SMILEY24, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
+                self._display.draw_text(self.frame_black, x, y + i*24, line, FONT_BIRTH24, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
                 i += 1
