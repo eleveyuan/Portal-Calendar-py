@@ -132,6 +132,14 @@ elif args.ranges == 'city':
     with open('zh-city.txt', 'r', encoding='utf8') as fr:
         lines = ''.join([l.strip() for l in fr.readlines()])
         code_point_ranges = list(map(lambda r: r.split(' ', 1), list(lines)))
+elif args.ranges == 'lunar':
+    with open('zh-lunar.txt', 'r', encoding='utf8') as fr:
+        lines = ''.join([l.strip() for l in fr.readlines()])
+        code_point_ranges = list(map(lambda r: r.split(' ', 1), list(lines)))
+elif args.ranges == 'birth':
+    with open('zh-birth.txt', 'r', encoding='utf8') as fr:
+        lines = ''.join([l.strip() for l in fr.readlines()])
+        code_point_ranges = list(map(lambda r: r.split(' ', 1), list(lines)))
 else:
     code_point_ranges = list(map(lambda r: r.split('-', 1), args.ranges.split(',')))
 font_path = args.font  # dir/to/SmileySans-Oblique.ttf
