@@ -40,8 +40,31 @@ There is two way to generate Glyphs I ever tried
 python build_font.py ./SmileySans-Oblique.ttf -name smiley320 -size 320 -ranges 1,2,3,4,5,6,7 -fg=0 -bg=255
 ```
 
+***3.** construct your own family members word list(eg. name, birth)
+
+```
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+你的姓氏我的名字
+:：，。’‘“”''-
+还有几天生日倒计时
+姓氏...
+名字...
+```
+
 For Chinese characters, refer to [Simplified-Chinese-Characters](https://github.com/jinghu-moon/Simplified-Chinese-Characters)
 
 ### build images
 
-It's pretty simple for building image. 
+It's pretty simple for building image. When buiding pictures, I performed padding on pictures whose width is not a multiple of 8.
+
+```
+IMG_WEATHER_INFO_DEGREE_SYMBOL = {
+   "data": [
+        ....
+    ],
+   "width": 8,   # original size: 7
+   "height": 28,
+   "pad": 1
+}
+
+```
