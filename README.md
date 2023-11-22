@@ -123,4 +123,5 @@ CN | [EN](./README-en.md)
 ### 字体
 项目使用的字体：
 1. [得意黑](https://github.com/atelier-anchor/smiley-sans)：项目主要使用得意黑，但是覆盖的字不够
-2. [LXGW WenKai / 霞鹜文楷](https://github.com/lxgw/LxgwWenKai)
+2. [LXGW WenKai / 霞鹜文楷](https://github.com/lxgw/LxgwWenKai): 缺点是字体比smiley宽太多了，屏幕大小有限，吃不消~ (will deprecate)
+3. [寒蝉云墨体](https://github.com/Warren2060/ChillYunmoGothic): 和smiley一样都是窄体字
