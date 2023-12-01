@@ -75,7 +75,7 @@ def lunar_day_internal(lunar1, lunar2):
     lunar_dt = [
         '\u4e00', '\u4e8c', '\u4e09', '\u56db', '\u4e94', '\u516d', '\u4e03', '\u516b', '\u4e5d', '\u5341',
         '\u5341\u4e00', '\u5341\u4e8c', '\u5341\u4e09', '\u5341\u56db', '\u5341\u4e94', '\u5341\u516d', '\u5341\u4e03', '\u5341\u516b', '\u5341\u4e5d',
-        '\u4e8c\u5341', '\u4e8c\u5341\u4e00', '\u4e8c\u5341\u4e8c', '\u4e8c\u5341\u4e09', '\u4e8c\u5341\u56db', '\u4e8c\u5341\u4e94', '\u4e8c\u5341\u516d', '\u4e8c\u5341\u4e03', '\u4e8c\u5341\u516b', '\u4e8c\u5341\u4e5d', '\u4e09\u5341'
+        '\u4e8c\u5341', '\u5eff\u4e00', '\u5eff\u4e8c', '\u5eff\u4e09', '\u5eff\u56db', '\u5eff\u4e94', '\u5eff\u516d', '\u5eff\u4e03', '\u5eff\u516b', '\u5eff\u4e5d', '\u4e09\u5341'
     ]
     llist1 = lunar1.replace('\u521d', '').split('\u6708')  # 初 \u521d
     llist2 = lunar2.replace('\u521d', '').split('\u6708')  # 月 \u6708
