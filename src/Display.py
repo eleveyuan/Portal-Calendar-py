@@ -83,7 +83,7 @@ class Display:
         # family logo
 
         # show BIG Date
-        line = b'{}'.format(day)
+        line = b'{:02}'.format(day)
         big_date_width = self._display.measure_text(line, FONT_BIG256)
         print(big_date_width)
         self._display.draw_text(self.frame_black, LEFT, 16, line, FONT_BIG256, DisplayEPD7in5.BLACK, DisplayEPD7in5.TOP_LEFT, 10)
