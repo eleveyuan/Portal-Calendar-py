@@ -41,17 +41,17 @@ def get_lunar(date, url=LUNAR_URL):
                 birthday_coming = []
                 if len(lunar_birthday) != 0:
                     for k, v in lunar_birthday.items():
-                        err = lunar_day_internal(v, result['data']['lunar'])
-                        if err is not None and err >= 0 and err <= 15:
+                        delta = lunar_day_internal(v, result['data']['lunar'])
+                        if delta is not None and delta >= 0 and delta <= 15:
                             birthday_coming.append({
-                                k: (v, err)    
+                                k: (v, delta)    
                             })
                 if len(birthday) != 0:
                     for k, v in birthday.items():
-                        err = day_internal(v, date)
-                        if err is not None and err >= 0 and err <= 15:
+                        delta = day_internal(v, date)
+                        if delta is not None and delta >= 0 and delta <= 15:
                             birthday_coming.append({
-                                k: (v, err)    
+                                k: (v, delta)    
                             })
 
                 lunar['weekday'] = result['data']['weekday']
