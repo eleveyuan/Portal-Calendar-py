@@ -266,3 +266,6 @@ class Display:
                 line = b'{}还有{}天生日：{}'.format(name, err, dt)
                 self._display.draw_text(self.frame_black, x, y + i*24, line, FONT_BIRTH24, DisplayEPD7in5.BLACK, DisplayEPD7in5.NONE_ALIGN)
                 i += 1
+    
+    def clear(self):
+        self._display.clear()
