@@ -16,6 +16,8 @@ CN | [EN](./README-en.md)
 
 ![lunar calendar](./img/lunar.jpg)
 
+![effect1](./img/effect1.png)
+
 ## 目录结构
 
 - **frame** 原项目的3d打印所需的stl文件
